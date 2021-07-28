@@ -2,6 +2,7 @@
 
 using namespace std;
 class CWorker;
+
 class CPipelineImp
 {
 public:
@@ -9,7 +10,8 @@ public:
 	~CPipelineImp();
 	void Run();
 	void AddWorker(CWorker*);
-	
+	void AddLastWorker(CWorker*);
+
 private:
 	vector<CWorker*> m_vecWorkerList;
 	CWorker* m_pCurWorker;

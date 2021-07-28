@@ -1,18 +1,28 @@
 #pragma once
 
-template<class T, unsigned N>
+template<class T>
 class CRingBuffer
 {
 public:
-	CRingBuffer() :m_nHead(0), m_nTail(0) {}
+	CRingBuffer(int nSize_)
+	{
+		m_nHead = m_nTail = 0;
+		m_nBufferSize = nSize_;
+		m_pBuffer = new T[m_nBufferSize];
+	}
+
+	~CRingBuffer()
+	{
+		delete[] m_pBuffer;
+	}
 
 	bool Put(T data_)
 	{
 		if (IsFull())
 			return false;
 
-		m_Buffer[m_nTail] = data_;
-		m_nTail = (m_nTail + 1) % (N + 1);
+		m_pBuffer[m_nTail] = data_;
+		m_nTail = (m_nTail + 1) % m_nBufferSize;
 		return true;
 	}
 
@@ -21,8 +31,8 @@ public:
 		if (IsEmpty())
 			return false;
 
-		data_ = m_Buffer[m_nHead];
-		m_nHead = (m_nHead + 1) % (N + 1);
+		data_ = m_pBuffer[m_nHead];
+		m_nHead = (m_nHead + 1) % m_nBufferSize;
 		return true;
 	}
 
@@ -33,7 +43,7 @@ public:
 
 	bool IsFull()
 	{
-		return (m_nTail + N + 2) % (N + 1) == m_nHead;
+		return (m_nTail + 1) % m_nBufferSize == m_nHead;
 	}
 
 	void Clear()
@@ -42,7 +52,8 @@ public:
 	}
 
 private:
-	T m_Buffer[N + 1];
+	T* m_pBuffer;
+	int m_nBufferSize;
 	volatile unsigned m_nHead;
 	volatile unsigned m_nTail;
 };

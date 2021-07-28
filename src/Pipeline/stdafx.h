@@ -6,3 +6,5 @@
 #include <thread>
 #include <condition_variable>
 #include <vector>
+
+#define PIPELINE_EXPORTS
