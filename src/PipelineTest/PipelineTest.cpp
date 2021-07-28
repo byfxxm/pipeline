@@ -13,8 +13,7 @@
 int main()
 {
 	auto _p = Pipeline_Create();
-
-	OutputDebugString("begin");
+	OutputDebugString("begin\n");
 
 	Pipeline_AddWorker(_p, Worker_Create([](void* pWorker_)
 	{
@@ -23,6 +22,9 @@ int main()
 			Worker_Write(pWorker_, _i);
 			printf("Worker[0] write %d\n", _i);
 		}
+
+		Worker_Write(pWorker_, -1);
+		printf("Worker[0] write -1\n");
 	}));
 
 	for (int _i = 1; _i < 10; _i++)
@@ -37,7 +39,7 @@ int main()
 				Worker_Write(pWorker_, _n);
 				printf("Worker[%d] write %d\n", _i, _n);
 
-				if (_n == 99)
+				if (_n == -1)
 					break;
 			}
 		}));
@@ -53,14 +55,14 @@ int main()
 			Worker_Write(pWorker_, _n);
 			printf("Worker[10] write %d\n", _n);
 
-			if (_n == 99)
+			if (_n == -1)
 				break;
 		}
 	}));
 
 	Pipeline_Run(_p);
-	OutputDebugString("end");
 
+	OutputDebugString("end\n");
 	Pipeline_Delete(_p);
 
 	return 0;

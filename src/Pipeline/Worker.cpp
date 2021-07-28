@@ -26,6 +26,7 @@ void CWorker::Write(int n_)
 		m_pCondVar->notify_all();
 		m_pCondVar->wait(_lock);
 	}
+
 	m_pCondVar->notify_all();
 }
 
@@ -38,6 +39,8 @@ int CWorker::Read()
 		m_pCondVar->notify_all();
 		m_pCondVar->wait(_lock);
 	}
+
+	m_pCondVar->notify_all();
 
 	return _nRet;
 }
