@@ -27,6 +27,9 @@
     <ClInclude Include="RingBuffer.h">
       <Filter>2.imp</Filter>
     </ClInclude>
+    <ClInclude Include="Worker.h">
+      <Filter>2.imp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -39,6 +42,9 @@
       <Filter>2.imp</Filter>
     </ClCompile>
     <ClCompile Include="PipelineImp.cpp">
+      <Filter>2.imp</Filter>
+    </ClCompile>
+    <ClCompile Include="Worker.cpp">
       <Filter>2.imp</Filter>
     </ClCompile>
   </ItemGroup>
