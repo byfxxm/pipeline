@@ -8,6 +8,8 @@
 #pragma comment(lib, "../Release/Pipeline.lib")
 #endif
 
+#define printf
+
 int main()
 {
 	auto _p = Pipeline_Create();
