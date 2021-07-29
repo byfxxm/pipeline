@@ -4,7 +4,9 @@
 
 CPipelineImp::CPipelineImp()
 {
-
+	m_pCurWorker = nullptr;
+	m_pFiber = nullptr;
+	m_bAbort = false;
 }
 
 CPipelineImp::~CPipelineImp()
@@ -14,24 +16,75 @@ CPipelineImp::~CPipelineImp()
 
 void CPipelineImp::Run()
 {
-	thread* _pThs = new thread[m_vecWorkerList.size()];
-
-	for (unsigned _i = 0; _i < m_vecWorkerList.size(); _i++)
+	thread _th([this]()
 	{
-		thread _th([this, _i]()
+		m_pFiber = ConvertThreadToFiber(nullptr);
+
+		for (auto _pWorker : m_vecWorkerList)
 		{
-			m_vecWorkerList[_i]->Do();
-		});
+			_pWorker->m_pFiber = CreateFiber(0, [](void* p_)
+			{
+				CWorker* _p = (CWorker*)p_;
 
-		_pThs[_i].swap(_th);
-	}
+				try
+				{
+					_p->Do();
+				}
+				catch (...)
+				{
 
-	for (unsigned _i = 0; _i < m_vecWorkerList.size(); _i++)
+				}
+
+				_p->m_nState = WS_STOP;
+				if (_p->m_pNextWorker != nullptr)
+					_p->m_pNextWorker->m_nState = WS_WORK;
+				_p->SwitchToMainFiber();
+			}, _pWorker);
+		}
+
+		Schedule();
+
+		ConvertFiberToThread();
+	});
+
+	_th.detach();
+}
+
+void CPipelineImp::Abort()
+{
+	m_bAbort = true;
+}
+
+void CPipelineImp::Schedule()
+{
+	if (m_vecWorkerList.empty())
+		return;
+
+	m_vecWorkerList[0]->m_nState = WS_WORK;
+
+	while (true)
 	{
-		_pThs[_i].join();
+		CWorker* _p = nullptr;
+		for (auto _it : m_vecWorkerList)
+		{
+			if (_it->m_nState == WS_WORK)
+			{
+				_p = _it;
+				break;
+			}
+		}
+
+		if (_p == nullptr)
+			break;
+
+		_ASSERT(_p != nullptr);
+		SwitchToFiber(_p->m_pFiber);
 	}
 
-	delete[] _pThs;
+	for (auto _it : m_vecWorkerList)
+	{
+		_it->m_nState = WS_STOP;
+	}
 }
 
 void CPipelineImp::AddWorker(CWorker* pWorker_)
@@ -39,9 +92,15 @@ void CPipelineImp::AddWorker(CWorker* pWorker_)
 	m_vecWorkerList.push_back(pWorker_);
 	pWorker_->m_pCondVar = &m_CondVar;
 	pWorker_->m_pMutex = &m_Mutex;
+	pWorker_->m_ppMainFiber = &m_pFiber;
+	pWorker_->m_pAbort = &m_bAbort;
 
 	if (m_pCurWorker != nullptr)
+	{
 		pWorker_->m_pPrev = m_pCurWorker->m_pNext;
+		pWorker_->m_pPrevWorker = m_pCurWorker;
+		m_pCurWorker->m_pNextWorker = pWorker_;
+	}
 
 	m_pCurWorker = pWorker_;
 }

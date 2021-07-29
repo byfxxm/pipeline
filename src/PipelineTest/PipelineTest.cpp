@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <Windows.h>
+#include <thread>
 #include "../Pipeline/Pipeline.h"
 
 #ifdef _DEBUG
@@ -8,7 +9,22 @@
 #pragma comment(lib, "../Release/Pipeline.lib")
 #endif
 
-#define printf
+//#define printf
+using namespace std;
+
+class NcCode
+{
+public:
+	NcCode()
+	{
+		OutputDebugString("construct NcCode\n");
+	}
+
+	~NcCode()
+	{
+		OutputDebugString("destruct NcCode\n");
+	}
+};
 
 int main()
 {
@@ -17,7 +33,9 @@ int main()
 
 	Pipeline_AddWorker(_p, Worker_Create([](void* pWorker_)
 	{
-		for (int _i = 0; _i < 100; _i++)
+		shared_ptr<NcCode> p(new NcCode);
+
+		for (int _i = 0; _i < 10000000; _i++)
 		{
 			Worker_Write(pWorker_, _i);
 			printf("Worker[0] write %d\n", _i);
@@ -33,6 +51,8 @@ int main()
 		{
 			while (true)
 			{
+				shared_ptr<NcCode> p(new NcCode);
+
 				int _n = Worker_Read(pWorker_);
 				printf("Worker[%d] read %d\n", _i, _n);
 				
@@ -49,6 +69,8 @@ int main()
 	{
 		while (true)
 		{
+			shared_ptr<NcCode> p(new NcCode);
+
 			int _n = Worker_Read(pWorker_);
 			printf("Worker[10] read %d\n", _n);
 
@@ -61,6 +83,11 @@ int main()
 	}));
 
 	Pipeline_Run(_p);
+
+	this_thread::sleep_for(chrono::milliseconds(500));
+	Pipeline_Abort(_p);
+
+	getchar();
 
 	OutputDebugString("end\n");
 	Pipeline_Delete(_p);
