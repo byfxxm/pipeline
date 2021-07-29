@@ -13,8 +13,11 @@ public:
 	void AddLastWorker(CWorker*);
 
 private:
+	void Schedule();
 	vector<CWorker*> m_vecWorkerList;
 	CWorker* m_pCurWorker;
 	condition_variable m_CondVar;
 	mutex m_Mutex;
+	void* m_pFiber;
+	bool m_bAbort;
 };

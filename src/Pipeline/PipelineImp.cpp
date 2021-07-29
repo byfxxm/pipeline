@@ -4,7 +4,9 @@
 
 CPipelineImp::CPipelineImp()
 {
-
+	m_pCurWorker = nullptr;
+	m_pFiber = nullptr;
+	m_bAbort = false;
 }
 
 CPipelineImp::~CPipelineImp()
@@ -14,24 +16,53 @@ CPipelineImp::~CPipelineImp()
 
 void CPipelineImp::Run()
 {
-	thread* _pThs = new thread[m_vecWorkerList.size()];
+	m_pFiber = ConvertThreadToFiber(nullptr);
 
-	for (unsigned _i = 0; _i < m_vecWorkerList.size(); _i++)
+	for (auto _pWorker : m_vecWorkerList)
 	{
-		thread _th([this, _i]()
+		_pWorker->m_pFiber = CreateFiber(0, [](void* p_)
 		{
-			m_vecWorkerList[_i]->Do();
-		});
+			CWorker* _p = (CWorker*)p_;
+			try
+			{
+				_p->Do();
+			}
+			catch (...)
+			{
 
-		_pThs[_i].swap(_th);
+			}
+
+			_p->m_nState = WS_STOP;
+		}, _pWorker);
 	}
 
-	for (unsigned _i = 0; _i < m_vecWorkerList.size(); _i++)
+	Schedule();
+
+	ConvertFiberToThread();
+}
+
+void CPipelineImp::Schedule()
+{
+	if (m_vecWorkerList.empty())
+		return;
+
+	m_vecWorkerList[0]->m_nState = WS_WORK;
+
+	while (!m_bAbort)
 	{
-		_pThs[_i].join();
-	}
+		CWorker* _p = nullptr;
+		for (auto _it : m_vecWorkerList)
+		{
+			if (_it->m_nState)
+			{
+				_p = _it;
+				break;
+			}
+		}
 
-	delete[] _pThs;
+		_ASSERT(_p != nullptr);
+		SwitchToFiber(_p->m_pFiber);
+	}
 }
 
 void CPipelineImp::AddWorker(CWorker* pWorker_)
@@ -39,6 +70,7 @@ void CPipelineImp::AddWorker(CWorker* pWorker_)
 	m_vecWorkerList.push_back(pWorker_);
 	pWorker_->m_pCondVar = &m_CondVar;
 	pWorker_->m_pMutex = &m_Mutex;
+	pWorker_->m_ppMainFiber = &m_pFiber;
 
 	if (m_pCurWorker != nullptr)
 		pWorker_->m_pPrev = m_pCurWorker->m_pNext;
