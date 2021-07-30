@@ -47,7 +47,7 @@ void CPipelineImp::Run()
 		ConvertFiberToThread();
 	});
 
-	_th.detach();
+	_th.join();
 }
 
 void CPipelineImp::Abort()
@@ -62,7 +62,7 @@ void CPipelineImp::Schedule()
 
 	m_vecWorkerList[0]->m_nState = WS_WORK;
 
-	while (true)
+	while (!m_bAbort)
 	{
 		CWorker* _p = nullptr;
 		for (auto _it : m_vecWorkerList)
@@ -83,7 +83,8 @@ void CPipelineImp::Schedule()
 
 	for (auto _it : m_vecWorkerList)
 	{
-		_it->m_nState = WS_STOP;
+		if (_it->m_nState == WS_REST)
+			SwitchToFiber(_it->m_pFiber);
 	}
 }
 

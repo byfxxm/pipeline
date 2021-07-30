@@ -52,6 +52,7 @@ int main()
 			while (true)
 			{
 				shared_ptr<NcCode> p(new NcCode);
+				shared_ptr<void> p1(Pipeline_Create(), [](void* p_) {Pipeline_Delete(p_); });
 
 				int _n = Worker_Read(pWorker_);
 				printf("Worker[%d] read %d\n", _i, _n);
@@ -82,12 +83,15 @@ int main()
 		}
 	}));
 
+	thread _th([_p]()
+	{
+		this_thread::sleep_for(chrono::milliseconds(500));
+		Pipeline_Abort(_p);
+	});
+
 	Pipeline_Run(_p);
 
-	this_thread::sleep_for(chrono::milliseconds(500));
-	Pipeline_Abort(_p);
-
-	getchar();
+	_th.join();
 
 	OutputDebugString("end\n");
 	Pipeline_Delete(_p);
