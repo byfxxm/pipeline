@@ -9,8 +9,8 @@
 
 PIPELINE_API void* Pipeline_Create();
 PIPELINE_API void Pipeline_Delete(void* pPipeline_);
-PIPELINE_API void Pipeline_Start(void* pPipeline_);
-PIPELINE_API void Pipeline_Stop(void* pPipeline_);
+PIPELINE_API void Pipeline_Run(void* pPipeline_);
+PIPELINE_API void Pipeline_Abort(void* pPipeline_);
 PIPELINE_API void Pipeline_AddWorker(void* pPipeline_, void* pWorker_);
 PIPELINE_API void Pipeline_AddLastWorker(void* pPipeline_, void* pWorker_);
 

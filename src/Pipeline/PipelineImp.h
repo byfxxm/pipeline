@@ -8,8 +8,8 @@ class CPipelineImp
 public:
 	CPipelineImp();
 	~CPipelineImp();
-	void Start();
-	void Stop();
+	void Run();
+	void Abort();
 	void AddWorker(CWorker*);
 	void AddLastWorker(CWorker*);
 
@@ -20,5 +20,5 @@ private:
 	condition_variable m_CondVar;
 	mutex m_Mutex;
 	void* m_pFiber;
-	bool m_bExit;
+	bool m_bAbort;
 };
