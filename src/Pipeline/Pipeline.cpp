@@ -13,14 +13,14 @@ void Pipeline_Delete(void* pPipeline_)
 	delete (CPipelineImp*)pPipeline_;
 }
 
-void Pipeline_Run(void* pPipeline_)
+void Pipeline_Start(void* pPipeline_)
 {
-	return ((CPipelineImp*)pPipeline_)->Run();
+	return ((CPipelineImp*)pPipeline_)->Start();
 }
 
-void Pipeline_Abort(void* pPipeline_)
+void Pipeline_Stop(void* pPipeline_)
 {
-	return ((CPipelineImp*)pPipeline_)->Abort();
+	return ((CPipelineImp*)pPipeline_)->Stop();
 }
 
 void Pipeline_AddWorker(void* pPipeline_, void* pWorker_)

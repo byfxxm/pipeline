@@ -6,7 +6,7 @@ CPipelineImp::CPipelineImp()
 {
 	m_pCurWorker = nullptr;
 	m_pFiber = nullptr;
-	m_bAbort = false;
+	m_bExit = false;
 }
 
 CPipelineImp::~CPipelineImp()
@@ -14,7 +14,7 @@ CPipelineImp::~CPipelineImp()
 
 }
 
-void CPipelineImp::Run()
+void CPipelineImp::Start()
 {
 	thread _th([this]()
 	{
@@ -50,9 +50,9 @@ void CPipelineImp::Run()
 	_th.join();
 }
 
-void CPipelineImp::Abort()
+void CPipelineImp::Stop()
 {
-	m_bAbort = true;
+	m_bExit = true;
 }
 
 void CPipelineImp::Schedule()
@@ -62,7 +62,7 @@ void CPipelineImp::Schedule()
 
 	m_vecWorkerList[0]->m_nState = WS_WORK;
 
-	while (!m_bAbort)
+	while (!m_bExit)
 	{
 		CWorker* _p = nullptr;
 		for (auto _it : m_vecWorkerList)
@@ -91,10 +91,10 @@ void CPipelineImp::Schedule()
 void CPipelineImp::AddWorker(CWorker* pWorker_)
 {
 	m_vecWorkerList.push_back(pWorker_);
-	pWorker_->m_pCondVar = &m_CondVar;
+	pWorker_->m_pCond = &m_CondVar;
 	pWorker_->m_pMutex = &m_Mutex;
 	pWorker_->m_ppMainFiber = &m_pFiber;
-	pWorker_->m_pAbort = &m_bAbort;
+	pWorker_->m_pAbort = &m_bExit;
 
 	if (m_pCurWorker != nullptr)
 	{

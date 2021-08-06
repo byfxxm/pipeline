@@ -29,7 +29,7 @@ private:
 	CWorker* m_pNextWorker;
 	CWorker* m_pPrevWorker;
 	function<void(void*)> m_fDo;
-	condition_variable* m_pCondVar;
+	condition_variable* m_pCond;
 	mutex* m_pMutex;
 	worker_state_t m_nState;
 	void* m_pFiber;

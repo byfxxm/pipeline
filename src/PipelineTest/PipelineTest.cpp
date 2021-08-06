@@ -85,11 +85,11 @@ int main()
 
 	thread _th([_p]()
 	{
-		this_thread::sleep_for(chrono::milliseconds(500));
-		Pipeline_Abort(_p);
+		this_thread::sleep_for(chrono::milliseconds(1500));
+		Pipeline_Stop(_p);
 	});
 
-	Pipeline_Run(_p);
+	Pipeline_Start(_p);
 
 	_th.join();
 
