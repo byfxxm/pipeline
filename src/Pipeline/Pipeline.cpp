@@ -18,6 +18,11 @@ void Pipeline_Run(void* pPipeline_)
 	return ((CPipelineImp*)pPipeline_)->Run();
 }
 
+void Pipeline_Abort(void* pPipeline_)
+{
+	return ((CPipelineImp*)pPipeline_)->Abort();
+}
+
 void Pipeline_AddWorker(void* pPipeline_, void* pWorker_)
 {
 	return ((CPipelineImp*)pPipeline_)->AddWorker((CWorker*)pWorker_);

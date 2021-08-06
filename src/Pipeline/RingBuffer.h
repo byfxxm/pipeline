@@ -48,7 +48,7 @@ public:
 
 	void Clear()
 	{
-		m_nHead = m_nTail = 0;
+		m_nHead = m_nTail;
 	}
 
 private:
