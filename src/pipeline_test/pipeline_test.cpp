@@ -4,97 +4,62 @@
 #include "../pipeline/pipeline.h"
 
 #ifdef _DEBUG
-#pragma comment(lib, "../Debug/Pipeline.lib")
+#pragma comment(lib, "../Debug/pipeline.lib")
 #else
-#pragma comment(lib, "../Release/Pipeline.lib")
+#pragma comment(lib, "../Release/pipeline.lib")
 #endif
 
 //#define printf
 using namespace std;
 
-class NcCode
+struct code : public part
 {
-public:
-	NcCode()
+	code()
 	{
 		OutputDebugString("construct NcCode\n");
 	}
 
-	~NcCode()
+	~code()
 	{
 		OutputDebugString("destruct NcCode\n");
 	}
+
+	int index{ 0 };
 };
 
 int main()
 {
-	auto _p = Pipeline_Create();
+	auto pipeline = pipeline_create();
 	OutputDebugString("begin\n");
 
-	Pipeline_AddWorker(_p, Worker_Create([](void* pWorker_)
-	{
-		shared_ptr<NcCode> p(new NcCode);
-
-		for (int _i = 0; _i < 10000000; _i++)
+	pipeline_add_procedure(pipeline, [](read read_f, write write_f)
 		{
-			Worker_Write(pWorker_, _i);
-			printf("Worker[0] write %d\n", _i);
-		}
-
-		Worker_Write(pWorker_, -1);
-		printf("Worker[0] write -1\n");
-	}));
+			for (int i = 0; i < 10000000; i++)
+			{
+				auto p = new code();
+				p->index = i;
+				write_f(p);
+				printf("Worker[0] write %d\n", i);
+			}
+		});
 
 	for (int _i = 1; _i < 10; _i++)
 	{
-		Pipeline_AddWorker(_p, Worker_Create([_i](void* pWorker_)
-		{
-			while (true)
+		pipeline_add_procedure(pipeline, [](read read_f, write write_f)
 			{
-				shared_ptr<NcCode> p(new NcCode);
-				shared_ptr<void> p1(Pipeline_Create(), [](void* p_) {Pipeline_Delete(p_); });
+				while (1)
+				{
+					code* code_ = (code*)read_f();
+					printf("read %d\n", code_->index);
 
-				int _n = Worker_Read(pWorker_);
-				printf("Worker[%d] read %d\n", _i, _n);
-				
-				Worker_Write(pWorker_, _n);
-				printf("Worker[%d] write %d\n", _i, _n);
-
-				if (_n == -1)
-					break;
-			}
-		}));
+					write_f(code_);
+					printf("write %d\n", code_->index);
+				}
+			});
 	}
 
-	Pipeline_AddLastWorker(_p, Worker_Create([](void* pWorker_)
-	{
-		while (true)
-		{
-			shared_ptr<NcCode> p(new NcCode);
-
-			int _n = Worker_Read(pWorker_);
-			printf("Worker[10] read %d\n", _n);
-
-			Worker_Write(pWorker_, _n);
-			printf("Worker[10] write %d\n", _n);
-
-			if (_n == -1)
-				break;
-		}
-	}));
-
-	thread _th([_p]()
-	{
-		this_thread::sleep_for(chrono::milliseconds(1500));
-		Pipeline_Abort(_p);
-	});
-
-	Pipeline_Run(_p);
-
-	_th.join();
-
-	OutputDebugString("end\n");
-	Pipeline_Delete(_p);
+	pipeline_start(pipeline);
+	pipeline_delete(pipeline);
 
 	return 0;
 }

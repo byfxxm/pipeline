@@ -1,59 +1,46 @@
 #pragma once
 
-template<class T>
-class CRingBuffer
+template<typename T, unsigned N>
+class ring_buffer
 {
 public:
-	CRingBuffer(int nSize_)
+	bool write(const T& data)
 	{
-		m_nHead = m_nTail = 0;
-		m_nBufferSize = nSize_;
-		m_pBuffer = new T[m_nBufferSize];
-	}
-
-	~CRingBuffer()
-	{
-		delete[] m_pBuffer;
-	}
-
-	bool Put(T data_)
-	{
-		if (IsFull())
+		if (is_full())
 			return false;
 
-		m_pBuffer[m_nTail] = data_;
-		m_nTail = (m_nTail + 1) % m_nBufferSize;
+		__buffer[__tail] = data;
+		__tail = (__tail + 1) % N;
 		return true;
 	}
 
-	bool Get(T& data_)
+	bool read(T& data)
 	{
-		if (IsEmpty())
+		if (is_empty())
 			return false;
 
-		data_ = m_pBuffer[m_nHead];
-		m_nHead = (m_nHead + 1) % m_nBufferSize;
+		data = __buffer[__head];
+		__head = (__head + 1) % N;
 		return true;
 	}
 
-	bool IsEmpty()
+	bool is_empty()
 	{
-		return m_nHead == m_nTail;
+		return __head == __tail;
 	}
 
-	bool IsFull()
+	bool is_full()
 	{
-		return (m_nTail + 1) % m_nBufferSize == m_nHead;
+		return (__tail + 1) % N == __head;
 	}
 
-	void Clear()
+	void clear()
 	{
-		m_nHead = m_nTail;
+		__head = __tail;
 	}
 
 private:
-	T* m_pBuffer;
-	int m_nBufferSize;
-	volatile unsigned m_nHead;
-	volatile unsigned m_nTail;
+	T __buffer[N];
+	volatile unsigned __head{ 0 };
+	volatile unsigned __tail{ 0 };
 };

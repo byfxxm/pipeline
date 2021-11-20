@@ -7,5 +7,7 @@
 #include <condition_variable>
 #include <vector>
 #include <functional>
+#include <cassert>
 
 #define PIPELINE_EXPORTS
+using namespace std;

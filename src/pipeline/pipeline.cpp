@@ -3,52 +3,27 @@
 #include "pipeline_imp.h"
 #include "worker.h"
 
-void* Pipeline_Create()
+void* pipeline_create()
 {
-	return new CPipelineImp();
+	return new pipeline_imp();
 }
 
-void Pipeline_Delete(void* pPipeline_)
+void pipeline_delete(void* pipeline)
 {
-	delete (CPipelineImp*)pPipeline_;
+	delete (pipeline_imp*)pipeline;
 }
 
-void Pipeline_Run(void* pPipeline_)
+void pipeline_start(void* pipeline)
 {
-	return ((CPipelineImp*)pPipeline_)->Run();
+	return ((pipeline_imp*)pipeline)->start();
 }
 
-void Pipeline_Abort(void* pPipeline_)
+void pipeline_stop(void* pipeline)
 {
-	return ((CPipelineImp*)pPipeline_)->Abort();
+	return ((pipeline_imp*)pipeline)->stop();
 }
 
-void Pipeline_AddWorker(void* pPipeline_, void* pWorker_)
+void pipeline_add_procedure(void* pipeline, procedure proc)
 {
-	return ((CPipelineImp*)pPipeline_)->AddWorker((CWorker*)pWorker_);
-}
-
-void Pipeline_AddLastWorker(void* pPipeline_, void* pWorker_)
-{
-	return ((CPipelineImp*)pPipeline_)->AddLastWorker((CWorker*)pWorker_);
-}
-
-void* Worker_Create(function<void(void* pWorker_)> fDo_)
-{
-	return new CWorker(fDo_);
-}
-
-void Worker_Delete(void* pWorker_)
-{
-	delete (CWorker*)pWorker_;
-}
-
-void Worker_Write(void* pWorker_, int n_)
-{
-	return ((CWorker*)pWorker_)->Write(n_);
-}
-
-int Worker_Read(void* pWorker_)
-{
-	return ((CWorker*)pWorker_)->Read();
+	return ((pipeline_imp*)pipeline)->add_procedure(proc);
 }

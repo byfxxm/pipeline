@@ -1,24 +1,22 @@
 #pragma once
+#include "pipeline.h"
+#include "worker.h"
 
-using namespace std;
-class CWorker;
-
-class CPipelineImp
+class pipeline_imp
 {
 public:
-	CPipelineImp();
-	~CPipelineImp();
-	void Run();
-	void Abort();
-	void AddWorker(CWorker*);
-	void AddLastWorker(CWorker*);
+	~pipeline_imp();
+	void start();
+	void stop();
+	void add_procedure(procedure);
 
 private:
-	void Schedule();
-	vector<CWorker*> m_vecWorkerList;
-	CWorker* m_pCurWorker;
-	condition_variable m_CondVar;
-	mutex m_Mutex;
-	void* m_pFiber;
-	bool m_bAbort;
+	void __schedule();
+
+private:
+	thread __running_thread;
+	vector<worker*> __worker_list;
+	int __cur_worker{ 0 };
+	void* __main_fiber{ nullptr };
+	bool __stopping{ false };
 };

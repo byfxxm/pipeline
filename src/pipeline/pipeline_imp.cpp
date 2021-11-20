@@ -2,113 +2,76 @@
 #include "pipeline_imp.h"
 #include "worker.h"
 
-CPipelineImp::CPipelineImp()
+pipeline_imp::~pipeline_imp()
 {
-	m_pCurWorker = nullptr;
-	m_pFiber = nullptr;
-	m_bAbort = false;
+	stop();
+
+	for (auto worker_ : __worker_list)
+		delete worker_;
 }
 
-CPipelineImp::~CPipelineImp()
+void pipeline_imp::start()
 {
-
-}
-
-void CPipelineImp::Run()
-{
-	thread _th([this]()
-	{
-		m_pFiber = ConvertThreadToFiber(nullptr);
-
-		for (auto _pWorker : m_vecWorkerList)
+	__running_thread = thread([this]()
 		{
-			_pWorker->m_pFiber = CreateFiber(0, [](void* p_)
-			{
-				CWorker* _p = (CWorker*)p_;
+			__main_fiber = ConvertThreadToFiber(nullptr);
 
-				try
-				{
-					_p->Do();
-				}
-				catch (...)
-				{
+			for (auto worker_ : __worker_list)
+				worker_->work();
 
-				}
+			__schedule();
 
-				_p->m_nState = WS_STOP;
-				if (_p->m_pNextWorker != nullptr)
-					_p->m_pNextWorker->m_nState = WS_WORK;
-				_p->SwitchToMainFiber();
-			}, _pWorker);
-		}
-
-		Schedule();
-
-		ConvertFiberToThread();
-	});
-
-	_th.join();
+			ConvertFiberToThread();
+		});
 }
 
-void CPipelineImp::Abort()
+void pipeline_imp::stop()
 {
-	m_bAbort = true;
+	__stopping = true;
+
+	if (__running_thread.joinable())
+		__running_thread.join();
 }
 
-void CPipelineImp::Schedule()
+void pipeline_imp::add_procedure(procedure proc)
 {
-	if (m_vecWorkerList.empty())
+	__worker_list.push_back(new worker(proc));
+}
+
+void pipeline_imp::__schedule()
+{
+	if (__worker_list.empty())
 		return;
 
-	m_vecWorkerList[0]->m_nState = WS_WORK;
+	__cur_worker = 0;
 
-	while (!m_bAbort)
+	while (!__stopping)
 	{
-		CWorker* _p = nullptr;
-		for (auto _it : m_vecWorkerList)
-		{
-			if (_it->m_nState == WS_WORK)
-			{
-				_p = _it;
-				break;
-			}
-		}
+		__worker_list[__cur_worker]->awake();
 
-		if (_p == nullptr)
+		switch (__worker_list[__cur_worker]->get_state())
+		{
+		case worker_state_t::WS_READING:
+			if (__cur_worker == 0)
+				throw exception("first worker shouldn't read!");
+
+			--__cur_worker;
 			break;
 
-		_ASSERT(_p != nullptr);
-		SwitchToFiber(_p->m_pFiber);
+		case worker_state_t::WS_WRITING:
+			if (__cur_worker == __worker_list.size())
+				break;
+
+			++__cur_worker;
+			break;
+
+		case worker_state_t::WS_DOING:
+			assert(0);
+			break;
+
+		case worker_state_t::WS_RESTING:
+		default:
+			break;
+		}
 	}
-
-	for (auto _it : m_vecWorkerList)
-	{
-		if (_it->m_nState == WS_REST)
-			SwitchToFiber(_it->m_pFiber);
-	}
-}
-
-void CPipelineImp::AddWorker(CWorker* pWorker_)
-{
-	m_vecWorkerList.push_back(pWorker_);
-	pWorker_->m_pCond = &m_CondVar;
-	pWorker_->m_pMutex = &m_Mutex;
-	pWorker_->m_ppMainFiber = &m_pFiber;
-	pWorker_->m_pAbort = &m_bAbort;
-
-	if (m_pCurWorker != nullptr)
-	{
-		pWorker_->m_pPrev = m_pCurWorker->m_pNext;
-		pWorker_->m_pPrevWorker = m_pCurWorker;
-		m_pCurWorker->m_pNextWorker = pWorker_;
-	}
-
-	m_pCurWorker = pWorker_;
-}
-
-void CPipelineImp::AddLastWorker(CWorker* pWorker_)
-{
-	AddWorker(pWorker_);
-	delete m_pCurWorker->m_pNext;
-	m_pCurWorker->m_pNext = new CRingBuffer<int>(20000);
 }
