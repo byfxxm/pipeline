@@ -18,16 +18,16 @@
     <ClInclude Include="stdafx.h">
       <Filter>1.dll</Filter>
     </ClInclude>
-    <ClInclude Include="Pipeline.h">
+    <ClInclude Include="pipeline.h">
       <Filter>2.imp</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineImp.h">
+    <ClInclude Include="pipeline_imp.h">
       <Filter>2.imp</Filter>
     </ClInclude>
-    <ClInclude Include="RingBuffer.h">
+    <ClInclude Include="ring_buffer.h">
       <Filter>2.imp</Filter>
     </ClInclude>
-    <ClInclude Include="Worker.h">
+    <ClInclude Include="worker.h">
       <Filter>2.imp</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,13 +38,13 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>1.dll</Filter>
     </ClCompile>
-    <ClCompile Include="Pipeline.cpp">
+    <ClCompile Include="pipeline.cpp">
       <Filter>2.imp</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineImp.cpp">
+    <ClCompile Include="pipeline_imp.cpp">
       <Filter>2.imp</Filter>
     </ClCompile>
-    <ClCompile Include="Worker.cpp">
+    <ClCompile Include="worker.cpp">
       <Filter>2.imp</Filter>
     </ClCompile>
   </ItemGroup>

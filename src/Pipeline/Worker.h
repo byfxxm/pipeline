@@ -1,5 +1,5 @@
 #pragma once
-#include "RingBuffer.h"
+#include "ring_buffer.h"
 
 using namespace std;
 using Fifo = CRingBuffer<int>;

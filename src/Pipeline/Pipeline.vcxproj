@@ -16,6 +16,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Pipeline</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>pipeline</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -87,17 +88,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Worker.h" />
-    <ClInclude Include="Pipeline.h" />
-    <ClInclude Include="PipelineImp.h" />
-    <ClInclude Include="RingBuffer.h" />
+    <ClInclude Include="worker.h" />
+    <ClInclude Include="pipeline.h" />
+    <ClInclude Include="pipeline_imp.h" />
+    <ClInclude Include="ring_buffer.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Worker.cpp" />
+    <ClCompile Include="worker.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="Pipeline.cpp" />
-    <ClCompile Include="PipelineImp.cpp" />
+    <ClCompile Include="pipeline.cpp" />
+    <ClCompile Include="pipeline_imp.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

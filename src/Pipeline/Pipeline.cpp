@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Pipeline.h"
-#include "PipelineImp.h"
-#include "Worker.h"
+#include "pipeline.h"
+#include "pipeline_imp.h"
+#include "worker.h"
 
 void* Pipeline_Create()
 {

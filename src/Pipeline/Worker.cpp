@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Worker.h"
+#include "worker.h"
 
 CWorker::CWorker(function<void(void*)> fDo_)
 {

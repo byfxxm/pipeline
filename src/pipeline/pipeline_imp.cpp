@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "PipelineImp.h"
-#include "Worker.h"
+#include "pipeline_imp.h"
+#include "worker.h"
 
 CPipelineImp::CPipelineImp()
 {

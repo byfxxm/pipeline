@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <Windows.h>
 #include <thread>
-#include "../Pipeline/Pipeline.h"
+#include "../pipeline/pipeline.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "../Debug/Pipeline.lib")
