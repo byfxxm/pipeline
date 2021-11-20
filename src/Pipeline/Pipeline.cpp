@@ -13,9 +13,9 @@ void pipeline_delete(void* pipeline)
 	delete (pipeline_imp*)pipeline;
 }
 
-void pipeline_start(void* pipeline)
+void pipeline_start(void* pipeline, output_func output)
 {
-	return ((pipeline_imp*)pipeline)->start();
+	return ((pipeline_imp*)pipeline)->start(output);
 }
 
 void pipeline_stop(void* pipeline)
@@ -23,7 +23,12 @@ void pipeline_stop(void* pipeline)
 	return ((pipeline_imp*)pipeline)->stop();
 }
 
-void pipeline_add_procedure(void* pipeline, procedure proc)
+void pipeline_add_procedure(void* pipeline, procedure_func proc)
 {
 	return ((pipeline_imp*)pipeline)->add_procedure(proc);
+}
+
+void pipeline_wait_for_idle(void* pipeline)
+{
+	return ((pipeline_imp*)pipeline)->wait_for_idle();
 }

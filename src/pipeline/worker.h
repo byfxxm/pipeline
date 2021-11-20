@@ -6,8 +6,7 @@ using fifo = ring_buffer<part*, 4>;
 
 enum class worker_state_t
 {
-	WS_RESTING,
-	WS_DOING,
+	WS_IDLE,
 	WS_READING,
 	WS_WRITING,
 };
@@ -15,19 +14,24 @@ enum class worker_state_t
 class worker
 {
 public:
-	worker(procedure);
+	worker(procedure_func);
+	~worker();
 	static void write(part*);
 	static part* read();
 	void asleep();
 	void awake();
-	void work();
+	void start_working(void*);
+	void end_working();
 	worker_state_t get_state();
 
 private:
-	fifo* __next{ nullptr };
+	friend class pipeline_imp;
+	fifo* __next{ new fifo() };
 	fifo* __prev{ nullptr };
-	procedure __proc_f{ nullptr };
+	procedure_func __proc{ nullptr };
 	void* __fiber{ nullptr };
 	void* __main_fiber{ nullptr };
-	worker_state_t __state{ worker_state_t::WS_RESTING };
+	worker_state_t __state{ worker_state_t::WS_IDLE };
+	read_func __read{ read };
+	write_func __write{ write };
 };

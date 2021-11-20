@@ -6,9 +6,10 @@ class pipeline_imp
 {
 public:
 	~pipeline_imp();
-	void start();
+	void start(output_func);
 	void stop();
-	void add_procedure(procedure);
+	void add_procedure(procedure_func);
+	void wait_for_idle();
 
 private:
 	void __schedule();

@@ -30,35 +30,37 @@ struct code : public part
 int main()
 {
 	auto pipeline = pipeline_create();
-	OutputDebugString("begin\n");
 
-	pipeline_add_procedure(pipeline, [](read read_f, write write_f)
+	pipeline_add_procedure(pipeline, [](read_func read, write_func write)
 		{
-			for (int i = 0; i < 10000000; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				auto p = new code();
 				p->index = i;
-				write_f(p);
-				printf("Worker[0] write %d\n", i);
+				write(p);
 			}
 		});
 
 	for (int _i = 1; _i < 10; _i++)
 	{
-		pipeline_add_procedure(pipeline, [](read read_f, write write_f)
+		pipeline_add_procedure(pipeline, [](read_func read, write_func write)
 			{
-				while (1)
-				{
-					code* code_ = (code*)read_f();
-					printf("read %d\n", code_->index);
+				code* code_ = nullptr;
 
-					write_f(code_);
-					printf("write %d\n", code_->index);
+				while (code_ = (code*)read())
+				{
+					write(code_);
 				}
 			});
 	}
 
-	pipeline_start(pipeline);
+	pipeline_start(pipeline, [](part* p)
+		{
+			printf("%d\n", ((code*)p)->index);
+			delete p;
+		});
+
+	pipeline_wait_for_idle(pipeline);
 	pipeline_delete(pipeline);
 
 	return 0;
