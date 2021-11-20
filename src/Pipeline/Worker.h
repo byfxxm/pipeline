@@ -1,39 +1,33 @@
 #pragma once
+#include "pipeline.h"
 #include "ring_buffer.h"
 
-using namespace std;
-using Fifo = CRingBuffer<int>;
+using fifo = ring_buffer<part*, 4>;
 
-enum worker_state_t
+enum class worker_state_t
 {
-	WS_REST,
-	WS_WORK,
-	WS_STOP,
+	WS_RESTING,
+	WS_DOING,
+	WS_READING,
+	WS_WRITING,
 };
 
-class CWorker
+class worker
 {
 public:
-	CWorker(function<void(void*)>);
-	~CWorker();
-	void Do();
-	void Write(int);
-	int Read();
-
-protected:
-	void SwitchToMainFiber();
+	worker(procedure);
+	static void write(part*);
+	static part* read();
+	void asleep();
+	void awake();
+	void work();
+	worker_state_t get_state();
 
 private:
-	Fifo* m_pNext;
-	Fifo* m_pPrev;
-	CWorker* m_pNextWorker;
-	CWorker* m_pPrevWorker;
-	function<void(void*)> m_fDo;
-	condition_variable* m_pCond;
-	mutex* m_pMutex;
-	worker_state_t m_nState;
-	void* m_pFiber;
-	void** m_ppMainFiber;
-	bool* m_pAbort;
-	friend class CPipelineImp;
+	fifo* __next{ nullptr };
+	fifo* __prev{ nullptr };
+	procedure __proc_f{ nullptr };
+	void* __fiber{ nullptr };
+	void* __main_fiber{ nullptr };
+	worker_state_t __state{ worker_state_t::WS_RESTING };
 };

@@ -1,60 +1,73 @@
 #include "stdafx.h"
+#include "pipeline.h"
 #include "worker.h"
 
-CWorker::CWorker(function<void(void*)> fDo_)
+worker::worker(procedure proc)
+	:__proc_f(proc)
 {
-	m_pNext = new Fifo(4);
-	m_pPrev = nullptr;
-	m_fDo = fDo_;
-	m_nState = WS_REST;
-	m_pFiber = nullptr;
-	m_ppMainFiber = nullptr;
-	m_pNextWorker = nullptr;
-	m_pPrevWorker = nullptr;
-	m_pAbort = nullptr;
 }
 
-CWorker::~CWorker()
+inline void worker::asleep()
 {
-	delete m_pNext;
+	SwitchToFiber(__main_fiber);
 }
 
-void CWorker::Do()
+void worker::awake()
 {
-	m_fDo(this);
+	SwitchToFiber(__fiber);
+	__state = worker_state_t::WS_DOING;
 }
 
-inline void CWorker::SwitchToMainFiber()
+void worker::write(part* part_)
 {
-	if (m_ppMainFiber != nullptr && *m_ppMainFiber != nullptr)
-		SwitchToFiber(*m_ppMainFiber);
-}
+	assert(IsThreadAFiber());
+	auto this_ = (worker*)GetFiberData();
 
-void CWorker::Write(int n_)
-{
-	while (!m_pNext->Put(n_))
+	while (!this_->__next->write(part_))
 	{
-		m_nState = WS_REST;
-		m_pNextWorker->m_nState = WS_WORK;
-		SwitchToMainFiber();
-
-		if (*m_pAbort)
-			throw "abort";
+		this_->__state = worker_state_t::WS_WRITING;
+		this_->asleep();
 	}
 }
 
-int CWorker::Read()
+part* worker::read()
 {
-	int _nRet = 0;
-	while (!m_pPrev->Get(_nRet))
-	{
-		m_nState = WS_REST;
-		m_pPrevWorker->m_nState = WS_WORK;
-		SwitchToMainFiber();
+	assert(IsThreadAFiber());
+	auto this_ = (worker*)GetFiberData();
 
-		if (*m_pAbort)
-			throw "abort";
+	part* ret{ nullptr };
+	while (!this_->__prev->read(ret))
+	{
+		this_->__state = worker_state_t::WS_READING;
+		this_->asleep();
 	}
 
-	return _nRet;
+	return ret;
+}
+
+void worker::work()
+{
+	if (__fiber)
+		DeleteFiber(__fiber);
+
+	__fiber = CreateFiber(0, [](void* p)
+		{
+			auto this_ = (worker*)p;
+
+			try
+			{
+				this_->__proc_f(worker::read, worker::write);
+			}
+			catch (...)
+			{
+
+			}
+
+			this_->asleep();
+		}, this);
+}
+
+worker_state_t worker::get_state()
+{
+	return __state;
 }
