@@ -74,7 +74,8 @@ void worker::start_working(void* main_fiber)
 			}
 			catch (...)
 			{
-				printf("error");
+				printf("unknown error!");
+				throw;
 			}
 
 			this_worker->__state = worker_state_t::WS_IDLE;
