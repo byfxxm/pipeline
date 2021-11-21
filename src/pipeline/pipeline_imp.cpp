@@ -38,10 +38,10 @@ void pipeline_imp::stop()
 
 void pipeline_imp::add_procedure(procedure_func proc)
 {
-	auto worker_ = new worker(proc);
+	auto worker_ = new worker(proc, __cur_worker);
 
 	if (!__worker_list.empty())
-		worker_->__prev = __worker_list.back()->__next;
+		worker_->__last_worker = __worker_list.back();
 
 	__worker_list.push_back(worker_);
 }
@@ -61,34 +61,9 @@ void pipeline_imp::__schedule()
 
 	while (!__stopping)
 	{
+		if (__cur_worker == __worker_list.size())
+			break;
+
 		__worker_list[__cur_worker]->awake();
-
-		switch (__worker_list[__cur_worker]->get_state())
-		{
-		case worker_state_t::WS_READING:
-			if (__cur_worker == 0)
-				throw exception("first worker shouldn't read");
-
-			if (__worker_list[__cur_worker - 1]->get_state() != worker_state_t::WS_IDLE)
-				--__cur_worker;
-			break;
-
-		case worker_state_t::WS_WRITING:
-			if (__cur_worker == __worker_list.size() - 1)
-				break;
-
-			++__cur_worker;
-			break;
-
-		case worker_state_t::WS_IDLE:
-			__worker_list[__cur_worker]->end_working();
-			++__cur_worker;
-			break;
-
-		default:
-			break;
-		}
 	}
-
-	printf("");
 }

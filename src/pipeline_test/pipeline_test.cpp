@@ -33,7 +33,7 @@ int main()
 
 	pipeline_add_procedure(pipeline, [](read_func read, write_func write)
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 1000; i++)
 			{
 				auto p = new code();
 				p->index = i;

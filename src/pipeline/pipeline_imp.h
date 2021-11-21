@@ -17,7 +17,7 @@ private:
 private:
 	thread __running_thread;
 	vector<worker*> __worker_list;
-	int __cur_worker{ 0 };
+	size_t __cur_worker{ 0 };
 	void* __main_fiber{ nullptr };
 	bool __stopping{ false };
 };
