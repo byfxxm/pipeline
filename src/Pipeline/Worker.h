@@ -3,11 +3,13 @@
 #include "ring_buffer.h"
 
 using fifo = ring_buffer<part*, 4>;
+struct quit {};
 
 enum class worker_state_t
 {
 	WS_IDLE,
 	WS_BUSY,
+	WS_QUIT,
 };
 
 class worker

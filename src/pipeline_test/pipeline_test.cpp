@@ -33,7 +33,7 @@ int main()
 
 	pipeline_add_procedure(pipeline, [](read_func read, write_func write)
 		{
-			for (int i = 0; i < 1000; i++)
+			for (int i = 0; i < 10000; i++)
 			{
 				auto p = new code();
 				p->index = i;
@@ -60,6 +60,13 @@ int main()
 			delete p;
 		});
 
+	thread th([pipeline]()
+		{
+			getchar();
+			pipeline_stop(pipeline);
+		});
+
+	th.join();
 	pipeline_wait_for_idle(pipeline);
 	pipeline_delete(pipeline);
 

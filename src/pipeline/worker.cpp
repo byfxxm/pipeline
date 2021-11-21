@@ -15,6 +15,9 @@ worker::~worker()
 void worker::asleep()
 {
 	SwitchToFiber(__main_fiber);
+
+	if (__state == worker_state_t::WS_QUIT)
+		throw quit();
 }
 
 void worker::awake()
@@ -66,6 +69,9 @@ void worker::start_working(void* main_fiber)
 				this_worker->__state = worker_state_t::WS_BUSY;
 				this_worker->__proc(this_worker->__read, this_worker->__write);
 			}
+			catch (quit)
+			{
+			}
 			catch (...)
 			{
 				printf("error");
@@ -82,10 +88,9 @@ void worker::end_working()
 	if (__state == worker_state_t::WS_IDLE)
 		return;
 
-	if (!__last_worker->__fifo->write(nullptr))
-		assert(0);
-
+	__state = worker_state_t::WS_QUIT;
 	awake();
+	assert(__state == worker_state_t::WS_IDLE);
 
 	if (__fiber)
 	{

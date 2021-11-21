@@ -26,6 +26,9 @@ void pipeline_imp::start(output_func output)
 
 			__schedule();
 
+			for (auto worker_ : __worker_list)
+				worker_->end_working();
+
 			ConvertFiberToThread();
 		});
 }
@@ -59,11 +62,6 @@ void pipeline_imp::__schedule()
 
 	__cur_worker = 0;
 
-	while (!__stopping)
-	{
-		if (__cur_worker == __worker_list.size())
-			break;
-
+	while (!__stopping && __cur_worker < __worker_list.size())
 		__worker_list[__cur_worker]->awake();
-	}
 }
