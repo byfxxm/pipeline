@@ -9,21 +9,10 @@
 #pragma comment(lib, "../Release/pipeline.lib")
 #endif
 
-//#define printf
 using namespace std;
 
 struct code : public part
 {
-	code()
-	{
-		OutputDebugString("construct NcCode\n");
-	}
-
-	~code()
-	{
-		OutputDebugString("destruct NcCode\n");
-	}
-
 	int index{ 0 };
 };
 
