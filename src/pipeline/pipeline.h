@@ -12,8 +12,14 @@ extern "C"
 	struct part {};
 	using read_func = part * (*)();
 	using write_func = void(*)(part*);
-	using procedure_func = void(*)(read_func, write_func);
-	using output_func = void(*)(part*);
+	using output_func = write_func;
+	
+	struct utility
+	{
+		read_func read{ nullptr };
+		write_func write{ nullptr };
+	};
+	using procedure_func = void(*)(utility*);
 
 	PIPELINE_API void* pipeline_create();
 	PIPELINE_API void pipeline_delete(void* pipeline);

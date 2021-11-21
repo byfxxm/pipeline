@@ -20,25 +20,25 @@ int main()
 {
 	auto pipeline = pipeline_create();
 
-	pipeline_add_procedure(pipeline, [](read_func read, write_func write)
+	pipeline_add_procedure(pipeline, [](utility* util)
 		{
 			for (int i = 0; i < 10000; i++)
 			{
 				auto p = new code();
 				p->index = i;
-				write(p);
+				util->write(p);
 			}
 		});
 
 	for (int _i = 1; _i < 10; _i++)
 	{
-		pipeline_add_procedure(pipeline, [](read_func read, write_func write)
+		pipeline_add_procedure(pipeline, [](utility* util)
 			{
 				code* code_ = nullptr;
 
-				while (code_ = (code*)read())
+				while (code_ = (code*)util->read())
 				{
-					write(code_);
+					util->write(code_);
 				}
 			});
 	}
@@ -51,7 +51,7 @@ int main()
 
 	thread th([pipeline]()
 		{
-			getchar();
+			this_thread::sleep_for(chrono::seconds(1));
 			pipeline_stop(pipeline);
 		});
 
