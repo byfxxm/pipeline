@@ -49,13 +49,13 @@ int main()
 			delete p;
 		});
 
-	thread th([pipeline]()
-		{
-			this_thread::sleep_for(chrono::seconds(1));
-			pipeline_stop(pipeline);
-		});
+	//thread th([pipeline]()
+	//	{
+	//		this_thread::sleep_for(chrono::seconds(1));
+	//		pipeline_stop(pipeline);
+	//	});
 
-	th.join();
+	//th.join();
 	pipeline_wait_for_idle(pipeline);
 	pipeline_delete(pipeline);
 

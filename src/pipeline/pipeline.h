@@ -9,13 +9,15 @@
 
 struct part {};
 using read_func = part * (*)();
-using write_func = void(*)(part*);
+using write_func = void (*)(part*);
 using output_func = write_func;
-	
+using syn_func = void (*)();
+
 struct utility
 {
 	read_func read{ nullptr };
 	write_func write{ nullptr };
+	syn_func syn{ nullptr };
 };
 using procedure_func = void(*)(utility*);
 

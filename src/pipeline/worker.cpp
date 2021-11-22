@@ -45,14 +45,32 @@ part* worker::read()
 
 	while (!this_worker->__last_worker->__fifo->read(ret))
 	{
-		if (this_worker->__last_worker->get_state() == worker_state_t::WS_IDLE)
-			return nullptr;
+		auto last_worker_state = this_worker->__last_worker->get_state();
+		if (last_worker_state == worker_state_t::WS_IDLE || last_worker_state == worker_state_t::WS_SYN)
+		{
+			this_worker->__state = last_worker_state;
+			++this_worker->__cur_worker;
+			this_worker->asleep();
+			continue;
+		}
 
 		--this_worker->__cur_worker;
 		this_worker->asleep();
 	}
 
 	return ret;
+}
+
+void worker::syn()
+{
+	assert(IsThreadAFiber());
+	auto this_worker = (worker*)GetFiberData();
+
+	this_worker->__state = worker_state_t::WS_SYN;
+	auto part_syn_ = new part_syn();
+	auto fu = part_syn_->prom.get_future();
+	this_worker->write(part_syn_);
+	fu.wait();
 }
 
 void worker::start_working(void* main_fiber)
@@ -68,7 +86,7 @@ void worker::start_working(void* main_fiber)
 			{
 				this_worker->__state = worker_state_t::WS_BUSY;
 
-				utility util{ this_worker->__read,  this_worker->__write };
+				utility util{ this_worker->__read,  this_worker->__write, this_worker->syn };
 				this_worker->__proc(&util);
 			}
 			catch (quit)

@@ -10,6 +10,13 @@ enum class worker_state_t
 	WS_IDLE,
 	WS_BUSY,
 	WS_QUIT,
+	WS_SYN,
+};
+
+struct part_syn : public part
+{
+	using syn_ty = promise<void>;
+	syn_ty prom;
 };
 
 class worker
@@ -22,6 +29,7 @@ public:
 	~worker();
 	static void write(part*);
 	static part* read();
+	static void syn();
 	void asleep();
 	void awake();
 	void start_working(void*);

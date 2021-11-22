@@ -7,6 +7,7 @@
 #include <vector>
 #include <functional>
 #include <cassert>
+#include <future>
 
 #define PIPELINE_EXPORTS
 using namespace std;
