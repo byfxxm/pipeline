@@ -57,10 +57,10 @@ int main()
 			});
 	}
 
-	//pipeline_add_procedure(pipeline, [](utility* utils)
-	//	{
-	//		throw exception("good");
-	//	});
+	pipeline_add_procedure(pipeline, [](utility* utils)
+		{
+			throw exception("good");
+		});
 
 	pipeline_start_async(pipeline, [](part* p)
 		{
@@ -79,7 +79,7 @@ int main()
 			delete (code*)p;
 		});
 
-#if 1
+#if 0
 	thread th([pipeline]()
 		{
 			this_thread::sleep_for(chrono::seconds(2));

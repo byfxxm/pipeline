@@ -78,6 +78,7 @@ void worker::start_working(void* main_fiber)
 	__fiber = CreateFiber(0, [](void* p)
 		{
 			auto this_worker = (worker*)p;
+			this_worker->__state = worker_state_t::WS_BUSY;
 
 			try
 			{

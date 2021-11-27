@@ -8,6 +8,7 @@ struct quit {};
 enum class worker_state_t
 {
 	WS_IDLE,
+	WS_BUSY,
 	WS_READING,
 	WS_WRITING,
 	WS_SYN,
