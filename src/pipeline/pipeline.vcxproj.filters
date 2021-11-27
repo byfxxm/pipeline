@@ -30,6 +30,9 @@
     <ClInclude Include="worker.h">
       <Filter>2.imp</Filter>
     </ClInclude>
+    <ClInclude Include="part.h">
+      <Filter>2.imp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
