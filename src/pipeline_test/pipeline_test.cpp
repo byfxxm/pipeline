@@ -30,7 +30,21 @@ int main()
 			}
 		});
 
-	for (int _i = 1; _i < 10; _i++)
+	pipeline_add_procedure(pipeline, [](utility* util)
+		{
+			code* code_ = nullptr;
+			int count = 0;
+			while (1)
+			{
+				code_ = (code*)util->read();
+				util->write(code_);
+
+				//if (++count > 2000)
+				//	util->syn();
+			}
+		});
+
+	for (int _i = 0; _i < 10; _i++)
 	{
 		pipeline_add_procedure(pipeline, [](utility* util)
 			{
@@ -45,6 +59,14 @@ int main()
 
 	pipeline_start(pipeline, [](part* p)
 		{
+			part_syn* part_syn_ = dynamic_cast<part_syn*>(p);
+			if (part_syn_)
+			{
+				part_syn_->prom.set_value();
+				delete p;
+				return;
+			}
+
 			printf("%d\n", ((code*)p)->index);
 			delete p;
 		});

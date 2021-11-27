@@ -2,8 +2,8 @@
 #include "pipeline.h"
 #include "worker.h"
 
-worker::worker(procedure_func proc, size_t& cur_worker)
-	:__proc(proc), __cur_worker(cur_worker)
+worker::worker(procedure_func proc)
+	:__proc(proc)
 {
 }
 
@@ -32,7 +32,7 @@ void worker::write(part* part_)
 
 	while (!this_worker->__fifo->write(part_))
 	{
-		++this_worker->__cur_worker;
+		this_worker->__state = worker_state_t::WS_WRITING;
 		this_worker->asleep();
 	}
 }
@@ -43,18 +43,9 @@ part* worker::read()
 	auto this_worker = (worker*)GetFiberData();
 	part* ret{ nullptr };
 
-	while (!this_worker->__last_worker->__fifo->read(ret))
+	while (!this_worker->__prev_fifo->read(ret))
 	{
-		auto last_worker_state = this_worker->__last_worker->get_state();
-		if (last_worker_state == worker_state_t::WS_IDLE || last_worker_state == worker_state_t::WS_SYN)
-		{
-			this_worker->__state = last_worker_state;
-			++this_worker->__cur_worker;
-			this_worker->asleep();
-			continue;
-		}
-
-		--this_worker->__cur_worker;
+		this_worker->__state = worker_state_t::WS_READING;
 		this_worker->asleep();
 	}
 
@@ -63,14 +54,14 @@ part* worker::read()
 
 void worker::syn()
 {
-	assert(IsThreadAFiber());
-	auto this_worker = (worker*)GetFiberData();
+	//assert(IsThreadAFiber());
+	//auto this_worker = (worker*)GetFiberData();
 
-	this_worker->__state = worker_state_t::WS_SYN;
-	auto part_syn_ = new part_syn();
-	auto fu = part_syn_->prom.get_future();
-	this_worker->write(part_syn_);
-	fu.wait();
+	//this_worker->__state = worker_state_t::WS_SYN;
+	//auto part_syn_ = new part_syn();
+	//auto fu = part_syn_->prom.get_future();
+	//this_worker->write(part_syn_);
+	//fu.wait();
 }
 
 void worker::start_working(void* main_fiber)
@@ -84,8 +75,6 @@ void worker::start_working(void* main_fiber)
 
 			try
 			{
-				this_worker->__state = worker_state_t::WS_BUSY;
-
 				utility util{ this_worker->__read,  this_worker->__write, this_worker->syn };
 				this_worker->__proc(&util);
 			}
@@ -94,24 +83,22 @@ void worker::start_working(void* main_fiber)
 			}
 			catch (...)
 			{
-				printf("unknown error!");
-				throw;
+				printf("unknown error!\n");
 			}
 
 			this_worker->__state = worker_state_t::WS_IDLE;
-			++this_worker->__cur_worker;
 			this_worker->asleep();
 		}, this);
 }
 
 void worker::end_working()
 {
-	if (__state == worker_state_t::WS_IDLE)
-		return;
-
-	__state = worker_state_t::WS_QUIT;
-	awake();
-	assert(__state == worker_state_t::WS_IDLE);
+	if (__state != worker_state_t::WS_IDLE)
+	{
+		__state = worker_state_t::WS_QUIT;
+		awake();
+		assert(__state == worker_state_t::WS_IDLE);
+	}
 
 	if (__fiber)
 	{

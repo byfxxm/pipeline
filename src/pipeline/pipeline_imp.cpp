@@ -41,10 +41,10 @@ void pipeline_imp::stop()
 
 void pipeline_imp::add_procedure(procedure_func proc)
 {
-	auto worker_ = new worker(proc, __cur_worker);
+	auto worker_ = new worker(proc);
 
 	if (!__worker_list.empty())
-		worker_->__last_worker = __worker_list.back();
+		worker_->__prev_fifo = __worker_list.back()->__fifo;
 
 	__worker_list.push_back(worker_);
 }
@@ -55,13 +55,43 @@ void pipeline_imp::wait_for_idle()
 		__running_thread.join();
 }
 
-void pipeline_imp::__schedule()
+void pipeline_imp::__schedule(size_t index)
 {
 	if (__worker_list.empty())
 		return;
 
-	__cur_worker = 0;
+	__cur_worker_index = index;
 
-	while (!__stopping && __cur_worker < __worker_list.size())
-		__worker_list[__cur_worker]->awake();
+	while (!__stopping)
+	{
+		if (__cur_worker_index == __worker_list.size())
+			break;
+
+		__worker_list[__cur_worker_index]->awake();
+
+		switch (__worker_list[__cur_worker_index]->get_state())
+		{
+		case worker_state_t::WS_READING:
+			if (__cur_worker_index <= index || __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_IDLE)
+			{
+				__worker_list[__cur_worker_index]->__state = worker_state_t::WS_IDLE;
+				++__cur_worker_index;
+				break;
+			}
+
+			--__cur_worker_index;
+			break;
+
+		case worker_state_t::WS_WRITING:
+		case worker_state_t::WS_IDLE:
+			++__cur_worker_index;
+			break;
+
+		case worker_state_t::WS_QUIT:
+			break;
+
+		default:
+			break;
+		}
+	}
 }
