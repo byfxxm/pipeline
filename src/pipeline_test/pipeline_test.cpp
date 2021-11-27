@@ -27,18 +27,18 @@ int main()
 
 	pipeline_add_procedure(pipeline, procedure1);
 
-	pipeline_add_procedure(pipeline, [](utility* util)
+	pipeline_add_procedure(pipeline, [](utility* utils)
 		{
 			code* code_ = nullptr;
 			int count = 0;
 			while (1)
 			{
-				code_ = (code*)util->read();
-				util->write(code_);
+				code_ = (code*)utils->read();
+				utils->write(code_);
 
 				if (count++ % 2000 == 0)
 				{
-					util->syn();
+					utils->syn();
 					printf("=================%d\n", g_index);
 				}
 			}
@@ -46,13 +46,13 @@ int main()
 
 	for (int _i = 0; _i < 10; _i++)
 	{
-		pipeline_add_procedure(pipeline, [](utility* util)
+		pipeline_add_procedure(pipeline, [](utility* utils)
 			{
 				code* code_ = nullptr;
 
-				while (code_ = (code*)util->read())
+				while (code_ = (code*)utils->read())
 				{
-					util->write(code_);
+					utils->write(code_);
 				}
 			});
 	}

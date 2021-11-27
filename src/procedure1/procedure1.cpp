@@ -7,12 +7,12 @@ struct code : public part
 	int index{ 0 };
 };
 
-void procedure1(utility* util)
+void procedure1(utility* utils)
 {
 	for (int i = 0; i < 10000; i++)
 	{
 		auto p = new code();
 		p->index = i;
-		util->write(p);
+		utils->write(p);
 	}
 }
