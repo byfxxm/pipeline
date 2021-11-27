@@ -57,10 +57,10 @@ int main()
 			});
 	}
 
-	pipeline_add_procedure(pipeline, [](utility* utils)
-		{
-			throw "good";
-		});
+	//pipeline_add_procedure(pipeline, [](utility* utils)
+	//	{
+	//		throw "good";
+	//	});
 
 	pipeline_start_async(pipeline, [](part* p)
 		{
@@ -69,7 +69,7 @@ int main()
 
 			if (p->tag == tag_t::TAG_SYN)
 			{
-				((part_syn*)p)->prom.set_value();
+				((part_syn*)p)->prom->set_value();
 				delete (part_syn*)p;
 				return;
 			}

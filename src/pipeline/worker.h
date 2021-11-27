@@ -16,7 +16,7 @@ enum class worker_state_t
 
 class worker
 {
-private:
+public:
 	friend class pipeline_imp;
 
 public:
@@ -40,4 +40,5 @@ private:
 	read_func __read{ read };
 	write_func __write{ write };
 	worker_state_t __state{ worker_state_t::WS_IDLE };
+	promise<void> __prom;
 };

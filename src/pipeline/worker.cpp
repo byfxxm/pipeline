@@ -59,8 +59,8 @@ void worker::syn()
 	assert(IsThreadAFiber());
 	auto this_worker = (worker*)GetFiberData();
 
-	auto part_syn_ = new part_syn();
-	auto fu = part_syn_->prom.get_future();
+	auto part_syn_ = new part_syn(&this_worker->__prom);
+	auto fu = part_syn_->prom->get_future();
 	this_worker->write(part_syn_);
 
 	auto state = this_worker->__state;
@@ -87,6 +87,10 @@ void worker::start_working(void* main_fiber)
 			catch (quit)
 			{
 			}
+			catch (exception ex)
+			{
+				printf(ex.what());
+			}
 			catch (...)
 			{
 				printf("unknown error!\n");
@@ -99,6 +103,9 @@ void worker::start_working(void* main_fiber)
 
 void worker::end_working()
 {
+	if (__prom.get_future().valid())
+		__prom.set_value();
+
 	if (__state != worker_state_t::WS_IDLE)
 	{
 		__state = worker_state_t::WS_QUITING;
