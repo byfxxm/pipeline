@@ -82,7 +82,7 @@ void worker::start_working(void* main_fiber)
 
 			try
 			{
-				utility util{ this_worker->__read,  this_worker->__write, this_worker->syn };
+				utility util{ this_worker->__read,  this_worker->__write, worker::syn };
 				this_worker->__proc(&util);
 			}
 			catch (quit)
