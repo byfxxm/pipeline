@@ -88,10 +88,11 @@ void pipeline_imp::__schedule()
 		{
 		case worker_state_t::WS_READING:
 			if (__cur_worker_index == 0
-				|| __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_IDLE
-				|| __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_SYN)
+				|| __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_READY
+				|| __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_SYN
+				|| __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_DONE)
 			{
-				__worker_list[__cur_worker_index]->__state = worker_state_t::WS_IDLE;
+				__worker_list[__cur_worker_index]->__state = worker_state_t::WS_READY;
 				++__cur_worker_index;
 				break;
 			}
@@ -100,12 +101,13 @@ void pipeline_imp::__schedule()
 			break;
 
 		case worker_state_t::WS_WRITING:
-		case worker_state_t::WS_IDLE:
+		case worker_state_t::WS_READY:
 		case worker_state_t::WS_SYN:
+		case worker_state_t::WS_DONE:
 			++__cur_worker_index;
 			break;
 
-		case worker_state_t::WS_QUIT:
+		case worker_state_t::WS_QUITING:
 			break;
 
 		default:

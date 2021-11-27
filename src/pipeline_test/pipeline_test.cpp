@@ -34,7 +34,7 @@ int main()
 				code_ = (code*)util->read();
 				util->write(code_);
 
-				if (++count > 2000)
+				//if (++count > 2000)
 					util->syn();
 			}
 		});
@@ -54,6 +54,9 @@ int main()
 
 	pipeline_start_async(pipeline, [](part* p)
 		{
+			if (!p)
+				return;
+
 			part_syn* part_syn_ = dynamic_cast<part_syn*>(p);
 			if (part_syn_)
 			{

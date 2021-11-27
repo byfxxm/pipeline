@@ -16,7 +16,7 @@ void worker::asleep()
 {
 	SwitchToFiber(__main_fiber);
 
-	if (__state == worker_state_t::WS_QUIT)
+	if (__state == worker_state_t::WS_QUITING)
 		throw quit();
 }
 
@@ -76,6 +76,7 @@ void worker::start_working(void* main_fiber)
 	__fiber = CreateFiber(0, [](void* p)
 		{
 			auto this_worker = (worker*)p;
+			this_worker->__state = worker_state_t::WS_READY;
 
 			try
 			{
@@ -90,18 +91,18 @@ void worker::start_working(void* main_fiber)
 				printf("unknown error!\n");
 			}
 
-			this_worker->__state = worker_state_t::WS_IDLE;
+			this_worker->__state = worker_state_t::WS_DONE;
 			this_worker->asleep();
 		}, this);
 }
 
 void worker::end_working()
 {
-	if (__state != worker_state_t::WS_IDLE)
+	if (__state != worker_state_t::WS_DONE)
 	{
-		__state = worker_state_t::WS_QUIT;
+		__state = worker_state_t::WS_QUITING;
 		awake();
-		assert(__state == worker_state_t::WS_IDLE);
+		assert(__state == worker_state_t::WS_DONE);
 	}
 
 	if (__fiber)
