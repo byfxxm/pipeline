@@ -62,17 +62,16 @@ int main()
 			if (!p)
 				return;
 
-			part_syn* part_syn_ = dynamic_cast<part_syn*>(p);
-			if (part_syn_)
+			if (p->tag == tag_t::TAG_SYN)
 			{
-				part_syn_->prom.set_value();
-				delete p;
+				((part_syn*)p)->prom.set_value();
+				delete (part_syn*)p;
 				return;
 			}
 
 			printf("%d\n", ((code*)p)->index);
 			g_index = ((code*)p)->index;
-			delete p;
+			delete (code*)p;
 		});
 
 	thread th([pipeline]()

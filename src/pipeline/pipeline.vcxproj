@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="part.h" />
     <ClInclude Include="worker.h" />
     <ClInclude Include="pipeline.h" />
     <ClInclude Include="pipeline_imp.h" />

@@ -1,5 +1,5 @@
 #pragma once
-#include <future>
+#include "part.h"
 
 #ifdef PIPELINE_EXPORTS
 #define PIPELINE_API __declspec(dllexport)
@@ -7,11 +7,6 @@
 #define PIPELINE_API __declspec(dllimport)
 #endif
 
-class part
-{
-public:
-	virtual ~part() = default;
-};
 using read_func = part * (*)();
 using write_func = void (*)(part*);
 using output_func = write_func;
@@ -24,12 +19,6 @@ struct utility
 	syn_func syn{ nullptr };
 };
 using procedure_func = void(*)(utility*);
-
-struct part_syn : public part
-{
-	using syn_ty = std::promise<void>;
-	syn_ty prom;
-};
 
 extern "C"
 {
