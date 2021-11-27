@@ -54,14 +54,18 @@ part* worker::read()
 
 void worker::syn()
 {
-	//assert(IsThreadAFiber());
-	//auto this_worker = (worker*)GetFiberData();
+	assert(IsThreadAFiber());
+	auto this_worker = (worker*)GetFiberData();
 
-	//this_worker->__state = worker_state_t::WS_SYN;
-	//auto part_syn_ = new part_syn();
-	//auto fu = part_syn_->prom.get_future();
-	//this_worker->write(part_syn_);
-	//fu.wait();
+	auto part_syn_ = new part_syn();
+	auto fu = part_syn_->prom.get_future();
+	this_worker->write(part_syn_);
+
+	auto state = this_worker->__state;
+	this_worker->__state = worker_state_t::WS_SYN;
+	this_worker->asleep();
+	fu.wait();
+	this_worker->__state = state;
 }
 
 void worker::start_working(void* main_fiber)

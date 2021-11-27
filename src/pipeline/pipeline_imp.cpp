@@ -55,24 +55,41 @@ void pipeline_imp::wait_for_idle()
 		__running_thread.join();
 }
 
-void pipeline_imp::__schedule(size_t index)
+void pipeline_imp::__schedule()
 {
 	if (__worker_list.empty())
 		return;
 
-	__cur_worker_index = index;
+	__cur_worker_index = 0;
 
 	while (!__stopping)
 	{
 		if (__cur_worker_index == __worker_list.size())
+		{
+			size_t index = 0;
+			for (; index < __worker_list.size(); ++index)
+			{
+				if (__worker_list[index]->get_state() == worker_state_t::WS_SYN)
+					break;
+			}
+
+			if (index != __worker_list.size())
+			{
+				__cur_worker_index = index;
+				continue;
+			}
+
 			break;
+		}
 
 		__worker_list[__cur_worker_index]->awake();
 
 		switch (__worker_list[__cur_worker_index]->get_state())
 		{
 		case worker_state_t::WS_READING:
-			if (__cur_worker_index <= index || __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_IDLE)
+			if (__cur_worker_index == 0
+				|| __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_IDLE
+				|| __worker_list[__cur_worker_index - 1]->get_state() == worker_state_t::WS_SYN)
 			{
 				__worker_list[__cur_worker_index]->__state = worker_state_t::WS_IDLE;
 				++__cur_worker_index;
@@ -84,6 +101,7 @@ void pipeline_imp::__schedule(size_t index)
 
 		case worker_state_t::WS_WRITING:
 		case worker_state_t::WS_IDLE:
+		case worker_state_t::WS_SYN:
 			++__cur_worker_index;
 			break;
 

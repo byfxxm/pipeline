@@ -12,7 +12,7 @@ public:
 	void wait_for_idle();
 
 private:
-	void __schedule(size_t = 0);
+	void __schedule();
 
 private:
 	thread __running_thread;

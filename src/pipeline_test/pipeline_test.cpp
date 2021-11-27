@@ -39,8 +39,8 @@ int main()
 				code_ = (code*)util->read();
 				util->write(code_);
 
-				//if (++count > 2000)
-				//	util->syn();
+				if (++count > 2000)
+					util->syn();
 			}
 		});
 
