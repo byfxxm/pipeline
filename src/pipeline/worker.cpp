@@ -78,7 +78,6 @@ void worker::start_working(void* main_fiber)
 	__fiber = CreateFiber(0, [](void* p)
 		{
 			auto this_worker = (worker*)p;
-			this_worker->__state = worker_state_t::WS_READY;
 
 			try
 			{
@@ -107,11 +106,10 @@ void worker::end_working()
 		assert(__state == worker_state_t::WS_DONE);
 	}
 
-	if (__fiber)
-	{
-		DeleteFiber(__fiber);
-		__fiber = nullptr;
-	}
+	assert(__fiber);
+	DeleteFiber(__fiber);
+	__fiber = nullptr;
+	__state = worker_state_t::WS_IDLE;
 }
 
 worker_state_t worker::get_state()

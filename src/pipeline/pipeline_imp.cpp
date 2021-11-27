@@ -87,21 +87,27 @@ void pipeline_imp::__schedule()
 		switch (__worker_list[__cur_worker]->get_state())
 		{
 		case worker_state_t::WS_READING:
-			if (__cur_worker == 0
-				|| __worker_list[__cur_worker - 1]->get_state() == worker_state_t::WS_READY
-				|| __worker_list[__cur_worker - 1]->get_state() == worker_state_t::WS_SYN
-				|| __worker_list[__cur_worker - 1]->get_state() == worker_state_t::WS_DONE)
+			if (__cur_worker == 0)
+				throw exception("first procedure shouldn't read");
+
+			switch (__worker_list[__cur_worker - 1]->get_state())
 			{
-				__worker_list[__cur_worker]->__state = worker_state_t::WS_READY;
+			case worker_state_t::WS_IDLE:
+			case worker_state_t::WS_SYN:
+			case worker_state_t::WS_DONE:
+				__worker_list[__cur_worker]->__state = worker_state_t::WS_IDLE;
 				++__cur_worker;
+				break;
+
+			default:
+				--__cur_worker;
 				break;
 			}
 
-			--__cur_worker;
 			break;
 
 		case worker_state_t::WS_WRITING:
-		case worker_state_t::WS_READY:
+		case worker_state_t::WS_IDLE:
 		case worker_state_t::WS_SYN:
 		case worker_state_t::WS_DONE:
 			++__cur_worker;
