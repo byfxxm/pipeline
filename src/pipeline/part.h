@@ -16,6 +16,6 @@ struct part
 
 struct part_syn : public part
 {
-	part_syn(std::promise<void>* pr) : part(tag_t::TAG_SYN), prom(pr) {}
-	std::promise<void>* prom{ nullptr };
+	part_syn() : part(tag_t::TAG_SYN) {}
+	std::promise<void> prom;
 };

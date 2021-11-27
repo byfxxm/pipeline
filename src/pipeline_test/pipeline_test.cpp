@@ -36,11 +36,11 @@ int main()
 				code_ = (code*)utils->read();
 				utils->write(code_);
 
-				//if (count++ % 2000 == 0)
-				//{
-				//	utils->syn();
-				//	printf("=================%d\n", g_index);
-				//}
+				if (count++ % 2000 == 0)
+				{
+					utils->syn();
+					printf("=================%d\n", g_index);
+				}
 			}
 		});
 
@@ -69,7 +69,7 @@ int main()
 
 			if (p->tag == tag_t::TAG_SYN)
 			{
-				((part_syn*)p)->prom->set_value();
+				((part_syn*)p)->prom.set_value();
 				delete (part_syn*)p;
 				return;
 			}
@@ -79,14 +79,14 @@ int main()
 			delete (code*)p;
 		});
 
-	thread th([pipeline]()
-		{
-			this_thread::sleep_for(chrono::seconds(2));
-			pipeline_stop_async(pipeline);
-			pipeline_wait_for_idle(pipeline);
-		});
+	//thread th([pipeline]()
+	//	{
+	//		this_thread::sleep_for(chrono::seconds(2));
+	//		pipeline_stop_async(pipeline);
+	//		pipeline_wait_for_idle(pipeline);
+	//	});
 
-	th.join();
+	//th.join();
 	pipeline_wait_for_idle(pipeline);
 	pipeline_delete(pipeline);
 
