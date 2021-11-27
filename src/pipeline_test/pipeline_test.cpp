@@ -2,11 +2,14 @@
 #include <Windows.h>
 #include <thread>
 #include "../pipeline/pipeline.h"
+#include "../procedure1/procedure1.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "../Debug/pipeline.lib")
+#pragma comment(lib, "../Debug/procedure1.lib")
 #else
 #pragma comment(lib, "../Release/pipeline.lib")
+#pragma comment(lib, "../Release/procedure1.lib")
 #endif
 
 using namespace std;
@@ -20,15 +23,7 @@ int main()
 {
 	auto pipeline = pipeline_create();
 
-	pipeline_add_procedure(pipeline, [](utility* util)
-		{
-			for (int i = 0; i < 10000; i++)
-			{
-				auto p = new code();
-				p->index = i;
-				util->write(p);
-			}
-		});
+	pipeline_add_procedure(pipeline, procedure1);
 
 	pipeline_add_procedure(pipeline, [](utility* util)
 		{
