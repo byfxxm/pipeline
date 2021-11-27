@@ -89,7 +89,7 @@ void worker::start_working(void* main_fiber)
 			}
 			catch (exception ex)
 			{
-				printf(ex.what());
+				printf("%s\n", ex.what());
 			}
 			catch (...)
 			{
