@@ -108,9 +108,8 @@ void pipeline_imp::__schedule()
 			break;
 
 		case worker_state_t::WS_QUITING:
-			break;
-
 		default:
+			assert(0);
 			break;
 		}
 	}
