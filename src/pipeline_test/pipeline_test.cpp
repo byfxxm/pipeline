@@ -50,9 +50,9 @@ int main()
 			{
 				code* code_ = nullptr;
 
-				while (code_ = (code*)utils->read())
+				while (1)
 				{
-					utils->write(code_);
+					utils->write(utils->read());
 				}
 			});
 	}
@@ -79,14 +79,17 @@ int main()
 			delete (code*)p;
 		});
 
-	//thread th([pipeline]()
-	//	{
-	//		this_thread::sleep_for(chrono::seconds(2));
-	//		pipeline_stop_async(pipeline);
-	//		pipeline_wait_for_idle(pipeline);
-	//	});
+#if 0
+	thread th([pipeline]()
+		{
+			this_thread::sleep_for(chrono::seconds(2));
+			pipeline_stop_async(pipeline);
+			pipeline_wait_for_idle(pipeline);
+		});
 
-	//th.join();
+	th.join();
+#endif
+
 	pipeline_wait_for_idle(pipeline);
 	pipeline_delete(pipeline);
 

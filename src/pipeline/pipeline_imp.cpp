@@ -66,20 +66,23 @@ void pipeline_imp::__schedule()
 	{
 		if (__cur_worker == __worker_list.size())
 		{
-			size_t index = 0;
-			for (; index < __worker_list.size(); ++index)
+			int index = __worker_list.size() - 1;
+
+			for (; index >= 0; --index)
 			{
-				if (__worker_list[index]->get_state() == worker_state_t::WS_SYN)
+				auto state = __worker_list[index]->get_state();
+
+				if (state == worker_state_t::WS_IDLE)
+					return;
+
+				if (state == worker_state_t::WS_SYN)
 					break;
 			}
 
-			if (index != __worker_list.size())
-			{
-				__cur_worker = index;
-				continue;
-			}
+			if (index < 0)
+				break;
 
-			break;
+			__cur_worker = index;
 		}
 
 		__worker_list[__cur_worker]->awake();
