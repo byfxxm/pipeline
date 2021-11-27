@@ -14,6 +14,7 @@ worker::~worker()
 
 void worker::asleep()
 {
+	assert(IsThreadAFiber());
 	SwitchToFiber(__main_fiber);
 
 	if (__state == worker_state_t::WS_QUITING)
@@ -22,6 +23,7 @@ void worker::asleep()
 
 void worker::awake()
 {
+	assert(IsThreadAFiber());
 	SwitchToFiber(__fiber);
 }
 
