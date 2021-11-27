@@ -13,7 +13,7 @@ pipeline_imp::~pipeline_imp()
 
 void pipeline_imp::start_async(output_func output)
 {
-	if (__running_thread.joinable() || __worker_list.empty())
+	if (__running_thread.joinable() || __worker_list.empty() || !output)
 		return;
 
 	__worker_list.back()->__write = output;
