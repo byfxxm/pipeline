@@ -92,24 +92,23 @@ void worker::start_working(void* main_fiber)
 				printf("unknown error!\n");
 			}
 
-			this_worker->__state = worker_state_t::WS_DONE;
+			this_worker->__state = worker_state_t::WS_IDLE;
 			this_worker->asleep();
 		}, this);
 }
 
 void worker::end_working()
 {
-	if (__state != worker_state_t::WS_DONE)
+	if (__state != worker_state_t::WS_IDLE)
 	{
 		__state = worker_state_t::WS_QUITING;
 		awake();
-		assert(__state == worker_state_t::WS_DONE);
+		assert(__state == worker_state_t::WS_IDLE);
 	}
 
 	assert(__fiber);
 	DeleteFiber(__fiber);
 	__fiber = nullptr;
-	__state = worker_state_t::WS_IDLE;
 }
 
 worker_state_t worker::get_state()

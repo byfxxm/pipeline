@@ -36,11 +36,11 @@ int main()
 				code_ = (code*)utils->read();
 				utils->write(code_);
 
-				if (count++ % 2000 == 0)
-				{
-					utils->syn();
-					printf("=================%d\n", g_index);
-				}
+				//if (count++ % 2000 == 0)
+				//{
+				//	utils->syn();
+				//	printf("=================%d\n", g_index);
+				//}
 			}
 		});
 
@@ -56,6 +56,11 @@ int main()
 				}
 			});
 	}
+
+	pipeline_add_procedure(pipeline, [](utility* utils)
+		{
+			throw "good";
+		});
 
 	pipeline_start_async(pipeline, [](part* p)
 		{

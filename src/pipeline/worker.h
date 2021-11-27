@@ -12,7 +12,6 @@ enum class worker_state_t
 	WS_WRITING,
 	WS_SYN,
 	WS_QUITING,
-	WS_DONE,
 };
 
 class worker
