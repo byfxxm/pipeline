@@ -19,6 +19,8 @@ struct code : public part
 	int index{ 0 };
 };
 
+static int g_index = 0;
+
 int main()
 {
 	auto pipeline = pipeline_create();
@@ -34,8 +36,11 @@ int main()
 				code_ = (code*)util->read();
 				util->write(code_);
 
-				if (++count > 2000)
+				if (count++ % 2000 == 0)
+				{
 					util->syn();
+					printf("=================%d\n", g_index);
+				}
 			}
 		});
 
@@ -54,6 +59,9 @@ int main()
 
 	pipeline_start_async(pipeline, [](part* p)
 		{
+			if (!p)
+				return;
+
 			part_syn* part_syn_ = dynamic_cast<part_syn*>(p);
 			if (part_syn_)
 			{
@@ -63,12 +71,13 @@ int main()
 			}
 
 			printf("%d\n", ((code*)p)->index);
+			g_index = ((code*)p)->index;
 			delete p;
 		});
 
 	thread th([pipeline]()
 		{
-			this_thread::sleep_for(chrono::seconds(1));
+			this_thread::sleep_for(chrono::seconds(2));
 			pipeline_stop_async(pipeline);
 			pipeline_wait_for_idle(pipeline);
 		});

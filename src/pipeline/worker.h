@@ -7,11 +7,12 @@ struct quit {};
 
 enum class worker_state_t
 {
-	WS_IDLE,
+	WS_READY,
 	WS_READING,
 	WS_WRITING,
 	WS_SYN,
-	WS_QUIT,
+	WS_QUITING,
+	WS_DONE,
 };
 
 class worker
@@ -37,7 +38,7 @@ private:
 	procedure_func __proc{ nullptr };
 	void* __fiber{ nullptr };
 	void* __main_fiber{ nullptr };
-	worker_state_t __state{ worker_state_t::WS_IDLE };
+	worker_state_t __state{ worker_state_t::WS_READY };
 	read_func __read{ read };
 	write_func __write{ write };
 };
