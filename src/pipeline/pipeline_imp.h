@@ -6,8 +6,8 @@ class pipeline_imp
 {
 public:
 	~pipeline_imp();
-	void start(output_func);
-	void stop();
+	void start_async(output_func);
+	void stop_async();
 	void add_procedure(procedure_func);
 	void wait_for_idle();
 

@@ -13,14 +13,14 @@ void pipeline_delete(void* pipeline)
 	delete (pipeline_imp*)pipeline;
 }
 
-void pipeline_start(void* pipeline, output_func output)
+void pipeline_start_async(void* pipeline, output_func output)
 {
-	return ((pipeline_imp*)pipeline)->start(output);
+	return ((pipeline_imp*)pipeline)->start_async(output);
 }
 
-void pipeline_stop(void* pipeline)
+void pipeline_stop_async(void* pipeline)
 {
-	return ((pipeline_imp*)pipeline)->stop();
+	return ((pipeline_imp*)pipeline)->stop_async();
 }
 
 void pipeline_add_procedure(void* pipeline, procedure_func proc)

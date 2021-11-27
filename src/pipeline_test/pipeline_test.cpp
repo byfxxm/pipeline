@@ -57,7 +57,7 @@ int main()
 			});
 	}
 
-	pipeline_start(pipeline, [](part* p)
+	pipeline_start_async(pipeline, [](part* p)
 		{
 			part_syn* part_syn_ = dynamic_cast<part_syn*>(p);
 			if (part_syn_)
@@ -71,13 +71,14 @@ int main()
 			delete p;
 		});
 
-	//thread th([pipeline]()
-	//	{
-	//		this_thread::sleep_for(chrono::seconds(1));
-	//		pipeline_stop(pipeline);
-	//	});
+	thread th([pipeline]()
+		{
+			this_thread::sleep_for(chrono::seconds(1));
+			pipeline_stop_async(pipeline);
+			pipeline_wait_for_idle(pipeline);
+		});
 
-	//th.join();
+	th.join();
 	pipeline_wait_for_idle(pipeline);
 	pipeline_delete(pipeline);
 

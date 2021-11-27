@@ -4,13 +4,14 @@
 
 pipeline_imp::~pipeline_imp()
 {
-	stop();
+	stop_async();
+	wait_for_idle();
 
 	for (auto worker_ : __worker_list)
 		delete worker_;
 }
 
-void pipeline_imp::start(output_func output)
+void pipeline_imp::start_async(output_func output)
 {
 	if (__running_thread.joinable() || __worker_list.empty())
 		return;
@@ -33,10 +34,9 @@ void pipeline_imp::start(output_func output)
 		});
 }
 
-void pipeline_imp::stop()
+void pipeline_imp::stop_async()
 {
 	__stopping = true;
-	wait_for_idle();
 }
 
 void pipeline_imp::add_procedure(procedure_func proc)
