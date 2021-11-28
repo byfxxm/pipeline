@@ -66,7 +66,7 @@ void pipeline_imp::__schedule()
 	{
 		if (__cur_worker == __worker_list.size())
 		{
-			int index = __worker_list.size() - 1;
+			intptr_t index = __worker_list.size() - 1;
 			for (; index >= 0; --index)
 			{
 				auto state = __worker_list[index]->get_state();

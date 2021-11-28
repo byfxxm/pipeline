@@ -4,13 +4,20 @@
 #include "../pipeline/pipeline.h"
 #include "../procedure1/procedure1.h"
 
-#ifdef _DEBUG
-#pragma comment(lib, "../Debug/pipeline.lib")
-#pragma comment(lib, "../Debug/procedure1.lib")
+#ifdef _WIN64
+#define PLATFORM "x64"
 #else
-#pragma comment(lib, "../Release/pipeline.lib")
-#pragma comment(lib, "../Release/procedure1.lib")
+#define PLATFORM ""
 #endif
+
+#ifdef _DEBUG
+#define CONFIG "Debug"
+#else
+#define CONFIG "Release"
+#endif
+
+#pragma comment(lib, "../" PLATFORM "/" CONFIG "/procedure1.lib")
+#pragma comment(lib, "../" PLATFORM "/" CONFIG "/pipeline.lib")
 
 using namespace std;
 
