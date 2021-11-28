@@ -9,8 +9,8 @@ public:
 		if (is_full())
 			return false;
 
-		__buffer[__write_index] = data;
 		__write_index = (__write_index + 1) % N;
+		__buffer[__write_index] = data;
 		return true;
 	}
 
@@ -19,8 +19,8 @@ public:
 		if (is_empty())
 			return false;
 
-		data = __buffer[__read_index];
 		__read_index = (__read_index + 1) % N;
+		data = __buffer[__read_index];
 		return true;
 	}
 

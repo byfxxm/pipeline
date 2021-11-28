@@ -79,7 +79,7 @@ int main()
 			delete (code*)p;
 		});
 
-#if 1
+#if 0
 	thread th([pipeline]()
 		{
 			this_thread::sleep_for(chrono::seconds(2));
