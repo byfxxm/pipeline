@@ -19,8 +19,6 @@
 #pragma comment(lib, "../" PLATFORM "/" CONFIG "/procedure1.lib")
 #pragma comment(lib, "../" PLATFORM "/" CONFIG "/pipeline.lib")
 
-using namespace std;
-
 struct code : public part
 {
 	int index{ 0 };
@@ -34,7 +32,7 @@ int main()
 
 	pipeline_add_procedure(pipeline, procedure1);
 
-	pipeline_add_procedure(pipeline, [](utility* utils)
+	pipeline_add_procedure(pipeline, [](utilities* utils)
 		{
 			code* code_ = nullptr;
 			int count = 0;
@@ -53,7 +51,7 @@ int main()
 
 	for (int _i = 0; _i < 10; _i++)
 	{
-		pipeline_add_procedure(pipeline, [](utility* utils)
+		pipeline_add_procedure(pipeline, [](utilities* utils)
 			{
 				code* code_ = nullptr;
 

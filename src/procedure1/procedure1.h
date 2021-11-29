@@ -6,9 +6,9 @@
 #define PROCEDURE1_API __declspec(dllimport)
 #endif
 
-struct utility;
+struct utilities;
 
 extern "C"
 {
-	PROCEDURE1_API void procedure1(utility*);
+	PROCEDURE1_API void procedure1(utilities*);
 }

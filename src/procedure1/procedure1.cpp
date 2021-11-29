@@ -7,7 +7,7 @@ struct code : public part
 	int index{ 0 };
 };
 
-void procedure1(utility* utils)
+void procedure1(utilities* utils)
 {
 	for (int i = 0; i < 10000; i++)
 	{

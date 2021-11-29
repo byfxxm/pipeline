@@ -12,13 +12,13 @@ using write_func = void (*)(part*);
 using output_func = write_func;
 using syn_func = void (*)();
 
-struct utility
+struct utilities
 {
 	read_func read{ nullptr };
 	write_func write{ nullptr };
 	syn_func syn{ nullptr };
 };
-using procedure_func = void(*)(utility*);
+using procedure_func = void(*)(utilities*);
 
 extern "C"
 {
