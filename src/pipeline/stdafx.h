@@ -10,3 +10,5 @@
 #include <future>
 
 #define PIPELINE_EXPORTS
+namespace pipeline {}
+using namespace pipeline;
