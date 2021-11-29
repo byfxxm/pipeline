@@ -63,11 +63,10 @@ void worker::syn()
 	auto fu = part_syn_->prom.get_future();
 	this_worker->write(part_syn_);
 
-	auto state = this_worker->__state;
 	this_worker->__state = worker_state_t::WS_SYN;
 	this_worker->asleep();
 	fu.wait();
-	this_worker->__state = state;
+	this_worker->__state = worker_state_t::WS_BUSY;
 }
 
 void worker::start_working(void* main_fiber)

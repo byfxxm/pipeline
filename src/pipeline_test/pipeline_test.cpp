@@ -62,10 +62,10 @@ int main()
 			});
 	}
 
-	//pipeline_add_procedure(pipeline, [](utility* utils)
-	//	{
-	//		throw exception("good");
-	//	});
+	pipeline_add_procedure(pipeline, [](utilities* utils)
+		{
+			throw std::exception("good");
+		});
 
 	pipeline_start_async(pipeline, [](part* p)
 		{
@@ -85,9 +85,9 @@ int main()
 		});
 
 #if 0
-	thread th([pipeline]()
+	std::thread th([pipeline]()
 		{
-			this_thread::sleep_for(chrono::seconds(2));
+			std::this_thread::sleep_for(std::chrono::seconds(2));
 			pipeline_stop_async(pipeline);
 			pipeline_wait_for_idle(pipeline);
 		});
