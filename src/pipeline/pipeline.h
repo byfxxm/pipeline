@@ -20,12 +20,16 @@ struct utilities
 };
 using procedure_func = void(*)(utilities*);
 
+#ifdef __cplusplus
 extern "C"
 {
+#endif
 	PIPELINE_API void* pipeline_create();
 	PIPELINE_API void pipeline_delete(void* pipeline);
 	PIPELINE_API void pipeline_start_async(void* pipeline, output_func output);
 	PIPELINE_API void pipeline_stop_async(void* pipeline);
 	PIPELINE_API void pipeline_add_procedure(void* pipeline, procedure_func proc);
 	PIPELINE_API void pipeline_wait_for_idle(void* pipeline);
+#ifdef __cplusplus
 }
+#endif
