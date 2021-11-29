@@ -18,7 +18,7 @@ void pipeline_imp::start_async(output_func output)
 
 	__worker_list.back()->__write = output;
 
-	__running_thread = thread([this]()
+	__running_thread = std::thread([this]()
 		{
 			__main_fiber = ConvertThreadToFiber(nullptr);
 
@@ -89,7 +89,7 @@ void pipeline_imp::__schedule()
 		{
 		case worker_state_t::WS_READING:
 			if (__cur_worker == 0)
-				throw exception("first procedure shouldn't read");
+				throw std::exception("first procedure shouldn't read");
 
 			switch (__worker_list[__cur_worker - 1]->get_state())
 			{

@@ -88,7 +88,7 @@ void worker::start_working(void* main_fiber)
 			catch (quit)
 			{
 			}
-			catch (exception ex)
+			catch (std::exception ex)
 			{
 				printf("%s\n", ex.what());
 			}
