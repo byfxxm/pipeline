@@ -34,14 +34,13 @@ int main()
 
 	pipeline_add_procedure(pipeline, [](utilities* utils)
 		{
-			code* code_ = nullptr;
 			int count = 0;
+
 			while (1)
 			{
-				code_ = (code*)utils->read();
-				utils->write(code_);
+				utils->write(utils->read());
 
-				if (count++ % 2000 == 0)
+				if (count++ % 1000 == 0)
 				{
 					utils->syn();
 					printf("=================%d\n", g_index);
@@ -49,23 +48,19 @@ int main()
 			}
 		});
 
-	for (int _i = 0; _i < 10; _i++)
+	for (int _i = 0; _i < 2; _i++)
 	{
 		pipeline_add_procedure(pipeline, [](utilities* utils)
 			{
-				code* code_ = nullptr;
-
 				while (1)
-				{
 					utils->write(utils->read());
-				}
 			});
 	}
 
-	pipeline_add_procedure(pipeline, [](utilities* utils)
-		{
-			throw std::exception("good");
-		});
+	//pipeline_add_procedure(pipeline, [](utilities* utils)
+	//	{
+	//		throw std::exception("good");
+	//	});
 
 	pipeline_start_async(pipeline, [](part* p)
 		{
