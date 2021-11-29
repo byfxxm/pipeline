@@ -13,13 +13,13 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="0.public">
+      <UniqueIdentifier>{c35e8e4f-5390-4adf-a327-58dbccdad497}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
       <Filter>1.dll</Filter>
-    </ClInclude>
-    <ClInclude Include="pipeline.h">
-      <Filter>2.imp</Filter>
     </ClInclude>
     <ClInclude Include="pipeline_imp.h">
       <Filter>2.imp</Filter>
@@ -32,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="part.h">
       <Filter>2.imp</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline.h">
+      <Filter>0.public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
