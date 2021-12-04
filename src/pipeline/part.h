@@ -9,8 +9,8 @@ enum class tag_t
 
 struct part
 {
-	part() = default;
-	part(tag_t tag_) : tag(tag_) {}
+	constexpr part() = default;
+	constexpr part(tag_t tag_) : tag(tag_) {}
 	tag_t tag{ tag_t::TAG_NORMAL };
 };
 
