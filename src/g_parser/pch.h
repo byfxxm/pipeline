@@ -11,6 +11,10 @@
 #include "framework.h"
 #include <string>
 #include <fstream>
+#include <optional>
+#include <vector>
+#include <limits>
+#include <cassert>
 
 namespace g_parser {}
 using namespace g_parser;
