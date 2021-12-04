@@ -7,17 +7,20 @@
 #define PIPELINE_API __declspec(dllimport)
 #endif
 
-using read_func = part * (*)();
-using write_func = void (*)(part*);
-using output_func = write_func;
-using syn_func = void (*)();
-
 struct utilities
 {
+	using read_func = part * (*)();
+	using write_func = void (*)(part*);
+	using syn_func = void (*)();
+
 	read_func read{ nullptr };
 	write_func write{ nullptr };
 	syn_func syn{ nullptr };
+	std::string file;
+	std::string str;
 };
+
+using output_func = utilities::write_func;
 using procedure_func = void(*)(utilities*);
 
 extern "C"

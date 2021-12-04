@@ -3,6 +3,7 @@
 #include <thread>
 #include "../pipeline/pipeline.h"
 #include "../procedure1/procedure1.h"
+#include "../g_parser/g_parser.h"
 
 #ifdef _WIN64
 #define PLATFORM "x64"
@@ -18,6 +19,7 @@
 
 #pragma comment(lib, "../" PLATFORM "/" CONFIG "/procedure1.lib")
 #pragma comment(lib, "../" PLATFORM "/" CONFIG "/pipeline.lib")
+#pragma comment(lib, "../" PLATFORM "/" CONFIG "/g_parser.lib")
 
 struct code : public part
 {
@@ -30,7 +32,7 @@ int main()
 {
 	auto pipeline = pipeline_create();
 
-	pipeline_add_procedure(pipeline, procedure1);
+	pipeline_add_procedure(pipeline, g_parser_proc);
 
 	pipeline_add_procedure(pipeline, [](utilities* utils)
 		{

@@ -43,8 +43,8 @@ namespace pipeline
 		procedure_func __proc{ nullptr };
 		void* __fiber{ nullptr };
 		void* __main_fiber{ nullptr };
-		read_func __read{ read };
-		write_func __write{ write };
+		utilities::read_func __read{ read };
+		utilities::write_func __write{ write };
 		worker_state_t __state{ worker_state_t::WS_IDLE };
 	};
 }
