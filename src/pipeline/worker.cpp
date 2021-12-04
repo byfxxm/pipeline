@@ -16,9 +16,7 @@ void worker::asleep()
 {
 	assert(IsThreadAFiber());
 	SwitchToFiber(__main_fiber);
-
-	if (__state == worker_state_t::WS_QUITING)
-		throw quit();
+	__quit_if();
 }
 
 void worker::awake()
@@ -77,10 +75,11 @@ void worker::start_working(void* main_fiber)
 	__fiber = CreateFiber(0, [](void* p)
 		{
 			auto this_worker = (worker*)p;
-			this_worker->__state = worker_state_t::WS_BUSY;
 
 			try
 			{
+				this_worker->__quit_if();
+				this_worker->__state = worker_state_t::WS_BUSY;
 				utilities util{ this_worker->__read,  this_worker->__write, worker::syn };
 				this_worker->__proc(&util);
 			}
@@ -118,4 +117,10 @@ void worker::end_working()
 worker_state_t worker::get_state()
 {
 	return __state;
+}
+
+inline void worker::__quit_if()
+{
+	if (__state == worker_state_t::WS_QUITING)
+		throw quit();
 }

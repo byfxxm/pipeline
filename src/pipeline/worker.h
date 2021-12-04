@@ -35,6 +35,9 @@ namespace pipeline
 		worker_state_t get_state();
 
 	private:
+		void __quit_if();
+
+	private:
 		fifo* __fifo{ new fifo() };
 		fifo* __prev_fifo{ nullptr };
 		procedure_func __proc{ nullptr };
