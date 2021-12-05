@@ -23,7 +23,7 @@ namespace pipeline
 		friend class pipeline_imp;
 
 	public:
-		worker(procedure_func);
+		worker(procedure_func, const std::string&);
 		~worker();
 		static void write(part*);
 		static part* read();
@@ -46,5 +46,6 @@ namespace pipeline
 		utilities::read_func __read{ read };
 		utilities::write_func __write{ write };
 		worker_state_t __state{ worker_state_t::WS_IDLE };
+		const std::string& __file;
 	};
 }

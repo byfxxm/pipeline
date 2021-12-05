@@ -15,7 +15,7 @@ namespace g_parser
 		END_OF_FILE,
 	};
 
-	struct token_struct
+	struct token_s
 	{
 		token tok{ token::NA };
 		std::string val;
@@ -26,7 +26,7 @@ namespace g_parser
 	public:
 		lexer() = delete;
 		lexer(std::ifstream&);
-		std::optional<token_struct> next_token();
+		std::optional<token_s> next_token();
 
 	private:
 		std::ifstream& __fin;

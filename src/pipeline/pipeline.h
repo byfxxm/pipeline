@@ -13,11 +13,10 @@ struct utilities
 	using write_func = void (*)(part*);
 	using syn_func = void (*)();
 
-	read_func read{ nullptr };
-	write_func write{ nullptr };
-	syn_func syn{ nullptr };
-	std::string file;
-	std::string str;
+	const read_func read{ nullptr };
+	const write_func write{ nullptr };
+	const syn_func syn{ nullptr };
+	const std::string file;
 };
 
 using output_func = utilities::write_func;
@@ -31,4 +30,6 @@ extern "C"
 	PIPELINE_API void pipeline_stop_async(void* pipeline);
 	PIPELINE_API void pipeline_add_procedure(void* pipeline, procedure_func proc);
 	PIPELINE_API void pipeline_wait_for_idle(void* pipeline);
+	PIPELINE_API void pipeline_set_file(void* pipeline, const char* file);
+	PIPELINE_API void pipeline_reset_file(void* pipeline);
 }

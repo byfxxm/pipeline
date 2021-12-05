@@ -41,7 +41,7 @@ void pipeline_imp::stop_async()
 
 void pipeline_imp::add_procedure(procedure_func proc)
 {
-	auto worker_ = new worker(proc);
+	auto worker_ = new worker(proc, __file);
 
 	if (!__worker_list.empty())
 		worker_->__prev_fifo = __worker_list.back()->__fifo;
@@ -53,6 +53,15 @@ void pipeline_imp::wait_for_idle()
 {
 	if (__running_thread.joinable())
 		__running_thread.join();
+}
+
+void pipeline_imp::set_file(const char* file)
+{
+	__file = file;
+}
+void pipeline_imp::reset_file()
+{
+	__file.clear();
 }
 
 void pipeline_imp::__schedule()

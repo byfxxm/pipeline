@@ -33,6 +33,9 @@
     <ClInclude Include="syntax.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="semantic.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="g_parser.cpp">
@@ -51,6 +54,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="syntax.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="semantic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

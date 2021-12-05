@@ -2,10 +2,7 @@
 #include "pipeline.h"
 #include "worker.h"
 
-worker::worker(procedure_func proc)
-	:__proc(proc)
-{
-}
+worker::worker(procedure_func proc, const std::string& file) : __proc(proc), __file(file) {}
 
 worker::~worker()
 {
@@ -80,7 +77,7 @@ void worker::start_working(void* main_fiber)
 			{
 				this_worker->__quit_if();
 				this_worker->__state = worker_state_t::WS_BUSY;
-				utilities util{ this_worker->__read,  this_worker->__write, worker::syn };
+				utilities util{ this_worker->__read,  this_worker->__write, worker::syn, this_worker->__file };
 				this_worker->__proc(&util);
 			}
 			catch (quit)

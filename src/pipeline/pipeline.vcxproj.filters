@@ -30,10 +30,10 @@
     <ClInclude Include="worker.h">
       <Filter>2.imp</Filter>
     </ClInclude>
-    <ClInclude Include="part.h">
-      <Filter>2.imp</Filter>
-    </ClInclude>
     <ClInclude Include="pipeline.h">
+      <Filter>0.public</Filter>
+    </ClInclude>
+    <ClInclude Include="part.h">
       <Filter>0.public</Filter>
     </ClInclude>
   </ItemGroup>

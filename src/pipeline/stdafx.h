@@ -8,6 +8,7 @@
 #include <functional>
 #include <cassert>
 #include <future>
+#include <fstream>
 
 #define PIPELINE_EXPORTS
 namespace pipeline {}

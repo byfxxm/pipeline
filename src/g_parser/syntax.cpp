@@ -7,7 +7,7 @@ syntax::syntax(std::ifstream& fin) : __fin(fin) {}
 sentence syntax::next_sentence()
 {
 	lexer lex(__fin);
-	std::optional<token_struct> tk_s;
+	std::optional<token_s> tk_s;
 	sentence ret;
 
 	while (!(tk_s = lex.next_token()).has_value())
@@ -29,12 +29,13 @@ sentence syntax::next_sentence()
 	return ret;
 }
 
-predicate syntax::__match_pred(token_struct tk_s)
+predicate syntax::__match_pred(token_s tk_s)
 {
 	assert(tk_s.tok == token::G);
+	auto val = std::stof(tk_s.val);
 
-	//if 
-	//{
-
-	//}
+	if (val == 0)
+		return predicate::G0;
+	
+	return predicate::NA;
 }

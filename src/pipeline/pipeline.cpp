@@ -32,3 +32,13 @@ void pipeline_wait_for_idle(void* pipeline)
 {
 	return ((pipeline_imp*)pipeline)->wait_for_idle();
 }
+
+void pipeline_set_file(void* pipeline, const char* file)
+{
+	return ((pipeline_imp*)pipeline)->set_file(file);
+}
+
+void pipeline_reset_file(void* pipeline)
+{
+	return ((pipeline_imp*)pipeline)->reset_file();
+}

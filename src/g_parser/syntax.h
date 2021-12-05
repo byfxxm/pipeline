@@ -13,7 +13,7 @@ namespace g_parser
 	struct sentence
 	{
 		predicate pred{ predicate::NA };
-		std::vector<token_struct> advs;
+		std::vector<token_s> advs;
 	};
 
 	class syntax
@@ -24,7 +24,7 @@ namespace g_parser
 		sentence next_sentence();
 
 	private:
-		predicate __match_pred(token_struct);
+		predicate __match_pred(token_s);
 
 	private:
 		std::ifstream& __fin;

@@ -12,6 +12,8 @@ namespace pipeline
 		void stop_async();
 		void add_procedure(procedure_func);
 		void wait_for_idle();
+		void set_file(const char*);
+		void reset_file();
 
 	private:
 		void __schedule();
@@ -22,5 +24,6 @@ namespace pipeline
 		size_t __cur_worker{ 0 };
 		void* __main_fiber{ nullptr };
 		bool __stopping{ false };
+		std::string __file;
 	};
 }
