@@ -10,6 +10,11 @@ bool g_parser_imp::load_file(std::string file)
 	return __file_stream.is_open();
 }
 
+void g_parser_imp::unload_file()
+{
+	__file_stream.close();
+}
+
 void g_parser_imp::parse(utilities* utils)
 {
 	semantic sem(__file_stream);

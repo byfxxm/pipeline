@@ -6,6 +6,7 @@ namespace g_parser
 	{
 	public:
 		bool load_file(std::string);
+		void unload_file();
 		void parse(utilities*);
 
 	private:
