@@ -4,21 +4,21 @@
 
 syntax::syntax(std::ifstream& fin) : __fin(fin) {}
 
-sentence syntax::next_sentence()
+std::optional<sentence> syntax::next_sentence()
 {
 	lexer lex(__fin);
 	std::optional<token_s> tk_s;
-	sentence ret;
+	std::optional<sentence> ret;
 
 	while (!(tk_s = lex.next_token()).has_value())
 	{
 		switch (tk_s.value().tok)
 		{
 		case token::G:
-			if (ret.pred != predicate::NA)
+			if (ret.value().pred != predicate::NA)
 				throw std::exception("double predicate");
 
-			ret.pred = __match_pred(tk_s.value());
+			ret.value().pred = __match_pred(tk_s.value());
 			break;
 
 		default:

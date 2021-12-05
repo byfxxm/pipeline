@@ -2,6 +2,7 @@
 #include "g_parser.h"
 #include "g_parser_imp.h"
 #include "semantic.h"
+#include "../pipeline/pipeline.h"
 
 bool g_parser_imp::load_file(std::string file)
 {
@@ -13,8 +14,7 @@ void g_parser_imp::parse(utilities* utils)
 {
 	semantic sem(__file_stream);
 	part* part_ = nullptr;
-	while (part_ = sem.next_code())
-	{
 
-	}
+	while (part_ = sem.next_code())
+		utils->write(part_);
 }

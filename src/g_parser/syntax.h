@@ -10,10 +10,12 @@ namespace g_parser
 		G1,
 	};
 
+	using advs_t = std::vector<token_s>;
+
 	struct sentence
 	{
 		predicate pred{ predicate::NA };
-		std::vector<token_s> advs;
+		advs_t advs;
 	};
 
 	class syntax
@@ -21,7 +23,7 @@ namespace g_parser
 	public:
 		syntax() = delete;
 		syntax(std::ifstream&);
-		sentence next_sentence();
+		std::optional<sentence> next_sentence();
 
 	private:
 		predicate __match_pred(token_s);
