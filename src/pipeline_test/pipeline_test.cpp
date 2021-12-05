@@ -32,7 +32,7 @@ int main()
 {
 	auto pipeline = pipeline_create();
 
-	pipeline_add_procedure(pipeline, g_parser_proc);
+	pipeline_add_procedure(pipeline, procedure1);
 
 	pipeline_add_procedure(pipeline, [](utilities* utils)
 		{

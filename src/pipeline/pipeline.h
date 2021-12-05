@@ -10,8 +10,8 @@
 struct utilities
 {
 	using read_func = part * (*)();
-	using write_func = void (*)(part*);
-	using syn_func = void (*)();
+	using write_func = void(*)(part*);
+	using syn_func = void(*)();
 
 	const read_func read{ nullptr };
 	const write_func write{ nullptr };
