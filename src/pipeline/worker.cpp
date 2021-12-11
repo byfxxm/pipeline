@@ -38,7 +38,7 @@ std::shared_ptr<part> worker::read()
 {
 	assert(IsThreadAFiber());
 	auto this_worker = (worker*)GetFiberData();
-	std::shared_ptr<part> ret{ nullptr };
+	std::shared_ptr<part> ret;
 
 	while (!this_worker->__prev_fifo->read(ret))
 	{
