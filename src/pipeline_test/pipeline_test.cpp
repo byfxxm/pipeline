@@ -10,16 +10,16 @@
 #else
 #define PLATFORM ""
 #endif
-
 #ifdef _DEBUG
 #define CONFIG "Debug"
 #else
 #define CONFIG "Release"
 #endif
+#define LIB_DIR "../" PLATFORM "/" CONFIG
 
-#pragma comment(lib, "../" PLATFORM "/" CONFIG "/procedure1.lib")
-#pragma comment(lib, "../" PLATFORM "/" CONFIG "/pipeline.lib")
-#pragma comment(lib, "../" PLATFORM "/" CONFIG "/g_parser.lib")
+#pragma comment(lib, LIB_DIR "/procedure1.lib")
+#pragma comment(lib, LIB_DIR "/pipeline.lib")
+#pragma comment(lib, LIB_DIR "/g_parser.lib")
 
 struct code : public part
 {
