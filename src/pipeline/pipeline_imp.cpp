@@ -21,15 +21,11 @@ void pipeline_imp::start_async(output_func output)
 	__running_thread = std::thread([this]()
 		{
 			__main_fiber = ConvertThreadToFiber(nullptr);
-
-			for (auto worker_ : __worker_list)
-				worker_->start_working(__main_fiber);
-
-			__schedule();
-
-			for (auto worker_ : __worker_list)
-				worker_->end_working();
-
+			{
+				__start_working();
+				__schedule();
+				__end_working();
+			}
 			ConvertFiberToThread();
 		});
 }
@@ -127,4 +123,16 @@ void pipeline_imp::__schedule()
 			break;
 		}
 	}
+}
+
+inline void pipeline_imp::__start_working()
+{
+	for (auto worker_ : __worker_list)
+		worker_->start_working(__main_fiber);
+}
+
+inline void pipeline_imp::__end_working()
+{
+	for (auto worker_ : __worker_list)
+		worker_->end_working();
 }

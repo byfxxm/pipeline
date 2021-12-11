@@ -17,6 +17,8 @@ namespace pipeline
 
 	private:
 		void __schedule();
+		void __start_working();
+		void __end_working();
 
 	private:
 		std::thread __running_thread;
