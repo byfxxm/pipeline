@@ -22,7 +22,7 @@ void worker::awake()
 	SwitchToFiber(__fiber);
 }
 
-void worker::write(part* part_)
+void worker::write(const std::shared_ptr<part>& part_)
 {
 	assert(IsThreadAFiber());
 	auto this_worker = (worker*)GetFiberData();
@@ -34,11 +34,11 @@ void worker::write(part* part_)
 	}
 }
 
-part* worker::read()
+std::shared_ptr<part> worker::read()
 {
 	assert(IsThreadAFiber());
 	auto this_worker = (worker*)GetFiberData();
-	part* ret{ nullptr };
+	std::shared_ptr<part> ret{ nullptr };
 
 	while (!this_worker->__prev_fifo->read(ret))
 	{
@@ -54,7 +54,7 @@ void worker::syn()
 	assert(IsThreadAFiber());
 	auto this_worker = (worker*)GetFiberData();
 
-	auto part_syn_ = new part_syn();
+	auto part_syn_ = std::make_shared<part_syn>();
 	auto fu = part_syn_->prom.get_future();
 	this_worker->write(part_syn_);
 

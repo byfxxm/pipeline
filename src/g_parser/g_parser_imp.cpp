@@ -18,7 +18,7 @@ void g_parser_imp::unload_file()
 void g_parser_imp::parse(utilities* utils)
 {
 	semantic sem(__file_stream);
-	part* part_ = nullptr;
+	std::shared_ptr<part> part_;
 
 	while (part_ = sem.next_code())
 		utils->write(part_);

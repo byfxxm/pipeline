@@ -8,7 +8,7 @@ namespace g_parser
 	{
 	public:
 		semantic(std::ifstream&);
-		part* next_code();
+		std::shared_ptr<part> next_code();
 
 	private:
 		std::ifstream& __fin;

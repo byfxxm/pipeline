@@ -11,7 +11,7 @@ void procedure1(utilities* utils)
 {
 	for (int i = 0; i < 10000; i++)
 	{
-		auto p = new code();
+		auto p = std::make_shared<code>();
 		p->index = i;
 		utils->write(p);
 	}

@@ -4,7 +4,7 @@
 
 namespace pipeline
 {
-	using fifo = ring_buffer<part*, 4>;
+	using fifo = ring_buffer<std::shared_ptr<part>, 4>;
 	struct quit {};
 
 	enum class worker_state_t
@@ -25,8 +25,8 @@ namespace pipeline
 	public:
 		worker(procedure_func, const std::string&);
 		~worker();
-		static void write(part*);
-		static part* read();
+		static void write(const std::shared_ptr<part>&);
+		static std::shared_ptr<part> read();
 		static void syn();
 		void asleep();
 		void awake();

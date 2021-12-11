@@ -9,8 +9,8 @@
 
 struct utilities
 {
-	using read_func = part * (*)();
-	using write_func = void(*)(part*);
+	using read_func = std::shared_ptr<part>(*)();
+	using write_func = void(*)(const std::shared_ptr<part>&);
 	using syn_func = void(*)();
 
 	const read_func read{ nullptr };

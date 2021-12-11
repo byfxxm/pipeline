@@ -64,21 +64,19 @@ int main()
 	//		throw std::exception("good");
 	//	});
 
-	pipeline_start_async(pipeline, [](part* p)
+	pipeline_start_async(pipeline, [](const std::shared_ptr<part>& p)
 		{
 			if (!p)
 				return;
 
 			if (p->tag == tag_t::TAG_SYN)
 			{
-				((part_syn*)p)->prom.set_value();
-				delete (part_syn*)p;
+				std::static_pointer_cast<part_syn>(p)->prom.set_value();
 				return;
 			}
 
-			printf("%d\n", ((code*)p)->index);
-			g_index = ((code*)p)->index;
-			delete (code*)p;
+			printf("%d\n", std::static_pointer_cast<code>(p)->index);
+			g_index = std::static_pointer_cast<code>(p)->index;
 		});
 
 #if 0
