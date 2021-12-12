@@ -53,7 +53,7 @@ int main()
 				if (count++ % 1000 == 0)
 				{
 					utils->syn();
-					printf("=================%d\n", g_index);
+					std::cout << "=================" << g_index << std::endl;
 				}
 			}
 		});
@@ -78,8 +78,9 @@ int main()
 				return;
 			}
 
-			printf("%d\n", std::static_pointer_cast<code>(p)->index);
-			g_index = std::static_pointer_cast<code>(p)->index;
+			auto p_ = std::static_pointer_cast<code>(p);
+			std::cout << p_->index << std::endl;
+			g_index = p_->index;
 		});
 
 #if 0
