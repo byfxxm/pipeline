@@ -11,6 +11,5 @@
 #include <fstream>
 #include <iostream>
 
-#define PIPELINE_EXPORTS
 namespace pipeline {}
 using namespace pipeline;
