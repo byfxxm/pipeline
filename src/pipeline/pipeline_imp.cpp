@@ -11,7 +11,7 @@ pipeline_imp::~pipeline_imp()
 		delete worker_;
 }
 
-void pipeline_imp::start_async(output_func output)
+void pipeline_imp::start_async(output_f output)
 {
 	if (__running_thread.joinable() || __worker_list.empty() || !output)
 		return;
@@ -35,7 +35,7 @@ void pipeline_imp::stop_async()
 	__stopping = true;
 }
 
-void pipeline_imp::add_procedure(procedure_func proc)
+void pipeline_imp::add_procedure(procedure_f proc)
 {
 	auto worker_ = new worker(proc, __file);
 

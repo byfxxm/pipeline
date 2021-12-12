@@ -8,9 +8,9 @@ namespace pipeline
 	{
 	public:
 		~pipeline_imp();
-		void start_async(output_func);
+		void start_async(output_f);
 		void stop_async();
-		void add_procedure(procedure_func);
+		void add_procedure(procedure_f);
 		void wait_for_idle();
 		void set_file(const char*);
 		void reset_file();

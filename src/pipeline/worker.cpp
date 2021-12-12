@@ -2,7 +2,7 @@
 #include "pipeline.h"
 #include "worker.h"
 
-worker::worker(procedure_func proc, const std::string& file) : __proc(proc), __file(file) {}
+worker::worker(procedure_f proc, const std::string& file) : __proc(proc), __file(file) {}
 
 worker::~worker()
 {

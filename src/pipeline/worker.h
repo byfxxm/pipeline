@@ -23,7 +23,7 @@ namespace pipeline
 		friend class pipeline_imp;
 
 	public:
-		worker(procedure_func, const std::string&);
+		worker(procedure_f, const std::string&);
 		~worker();
 		static void write(const std::shared_ptr<part>&);
 		static std::shared_ptr<part> read();
@@ -40,11 +40,11 @@ namespace pipeline
 	private:
 		fifo* __fifo{ new fifo() };
 		fifo* __prev_fifo{ nullptr };
-		procedure_func __proc{ nullptr };
+		procedure_f __proc{ nullptr };
 		void* __fiber{ nullptr };
 		void* __main_fiber{ nullptr };
-		utilities::read_func __read{ read };
-		utilities::write_func __write{ write };
+		utilities::read_f __read{ read };
+		utilities::write_f __write{ write };
 		worker_state_t __state{ worker_state_t::WS_IDLE };
 		const std::string& __file;
 	};
