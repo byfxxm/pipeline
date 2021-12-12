@@ -34,13 +34,13 @@ int main()
 
 	pipeline_add_procedure(pipeline, procedure1);
 
-	//pipeline_add_procedure(pipeline, [](utilities* utils)
-	//	{
-	//		for (int i = 0; i < 2000; ++i)
-	//			utils->write(utils->read());
-	//		
-	//		throw std::exception("good");
-	//	});
+	pipeline_add_procedure(pipeline, [](utilities* utils)
+		{
+			for (int i = 0; i < 2000; ++i)
+				utils->write(utils->read());
+			
+			throw std::exception("=========== exception");
+		});
 
 	pipeline_add_procedure(pipeline, [](utilities* utils)
 		{
