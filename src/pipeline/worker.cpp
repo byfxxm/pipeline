@@ -68,6 +68,7 @@ void worker::start_working(void* main_fiber)
 {
 	assert(!__fiber);
 	__main_fiber = main_fiber;
+	__state = worker_state_t::WS_READY;
 
 	__fiber = CreateFiber(0, [](void* p)
 		{
@@ -76,7 +77,6 @@ void worker::start_working(void* main_fiber)
 			try
 			{
 				this_worker->__quit_if();
-				this_worker->__state = worker_state_t::WS_BUSY;
 				utilities util{ this_worker->__read,  this_worker->__write, worker::syn, this_worker->__file.c_str() };
 				this_worker->__proc(&util);
 			}
@@ -92,18 +92,18 @@ void worker::start_working(void* main_fiber)
 				printf("unknown error!\n");
 			}
 
-			this_worker->__state = worker_state_t::WS_IDLE;
+			this_worker->__state = worker_state_t::WS_DONE;
 			this_worker->asleep();
 		}, this);
 }
 
 void worker::end_working()
 {
-	if (__state != worker_state_t::WS_IDLE)
+	if (__state != worker_state_t::WS_DONE)
 	{
 		__state = worker_state_t::WS_QUITING;
 		awake();
-		assert(__state == worker_state_t::WS_IDLE);
+		assert(__state == worker_state_t::WS_DONE);
 	}
 
 	assert(__fiber);

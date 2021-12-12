@@ -75,7 +75,7 @@ void pipeline_imp::__schedule()
 			for (; index >= 0; --index)
 			{
 				auto state = __worker_list[index]->get_state();
-				if (state == worker_state_t::WS_IDLE)
+				if (state == worker_state_t::WS_DONE)
 					return;
 
 				if (state == worker_state_t::WS_SYN)
@@ -99,7 +99,7 @@ void pipeline_imp::__schedule()
 			switch (__worker_list[__cur_worker - 1]->get_state())
 			{
 			case worker_state_t::WS_READING:
-			case worker_state_t::WS_IDLE:
+			case worker_state_t::WS_DONE:
 			case worker_state_t::WS_SYN:
 				++__cur_worker;
 				break;
@@ -112,7 +112,7 @@ void pipeline_imp::__schedule()
 			break;
 
 		case worker_state_t::WS_WRITING:
-		case worker_state_t::WS_IDLE:
+		case worker_state_t::WS_DONE:
 		case worker_state_t::WS_SYN:
 			++__cur_worker;
 			break;

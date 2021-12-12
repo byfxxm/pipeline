@@ -9,12 +9,14 @@ namespace pipeline
 
 	enum class worker_state_t
 	{
-		WS_IDLE,
+		WS_INVALID,
+		WS_READY,
 		WS_BUSY,
 		WS_READING,
 		WS_WRITING,
 		WS_SYN,
 		WS_QUITING,
+		WS_DONE,
 	};
 
 	class worker
@@ -45,7 +47,7 @@ namespace pipeline
 		void* __main_fiber{ nullptr };
 		utilities::read_f __read{ read };
 		utilities::write_f __write{ write };
-		worker_state_t __state{ worker_state_t::WS_IDLE };
+		worker_state_t __state{ worker_state_t::WS_INVALID };
 		const std::string& __file;
 	};
 }
