@@ -11,7 +11,6 @@ namespace pipeline
 	{
 		WS_INVALID,
 		WS_READY,
-		WS_BUSY,
 		WS_READING,
 		WS_WRITING,
 		WS_SYN,

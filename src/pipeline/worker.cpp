@@ -61,7 +61,6 @@ void worker::syn()
 	this_worker->__state = worker_state_t::WS_SYN;
 	this_worker->asleep();
 	fu.wait();
-	this_worker->__state = worker_state_t::WS_BUSY;
 }
 
 void worker::start_working(void* main_fiber)
