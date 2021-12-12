@@ -36,7 +36,7 @@ int main()
 
 	pipeline_add_procedure(pipeline, [](utilities* utils)
 		{
-			for (int i = 0; i < 5000; ++i)
+			for (int i = 0; i < 5001; ++i)
 				utils->write(utils->read());
 			
 			throw std::exception("=========== exception");
