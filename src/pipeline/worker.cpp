@@ -77,7 +77,7 @@ void worker::start_working(void* main_fiber)
 			{
 				this_worker->__quit_if();
 				this_worker->__state = worker_state_t::WS_BUSY;
-				utilities util{ this_worker->__read,  this_worker->__write, worker::syn, this_worker->__file };
+				utilities util{ this_worker->__read,  this_worker->__write, worker::syn, this_worker->__file.c_str() };
 				this_worker->__proc(&util);
 			}
 			catch (quit)

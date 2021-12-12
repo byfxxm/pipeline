@@ -34,6 +34,14 @@ int main()
 
 	pipeline_add_procedure(pipeline, procedure1);
 
+	//pipeline_add_procedure(pipeline, [](utilities* utils)
+	//	{
+	//		for (int i = 0; i < 2000; ++i)
+	//			utils->write(utils->read());
+	//		
+	//		throw std::exception("good");
+	//	});
+
 	pipeline_add_procedure(pipeline, [](utilities* utils)
 		{
 			int count = 0;
@@ -58,11 +66,6 @@ int main()
 					utils->write(utils->read());
 			});
 	}
-
-	//pipeline_add_procedure(pipeline, [](utilities* utils)
-	//	{
-	//		throw std::exception("good");
-	//	});
 
 	pipeline_start_async(pipeline, [](const std::shared_ptr<part>& p)
 		{
