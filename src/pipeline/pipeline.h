@@ -16,7 +16,7 @@ struct utilities
 	const read_func read{ nullptr };
 	const write_func write{ nullptr };
 	const syn_func syn{ nullptr };
-	const char* file;
+	const char* file{ nullptr };
 };
 
 using output_func = utilities::write_func;
