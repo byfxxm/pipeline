@@ -9,6 +9,7 @@
 #include <cassert>
 #include <future>
 #include <fstream>
+#include <iostream>
 
 #define PIPELINE_EXPORTS
 namespace pipeline {}

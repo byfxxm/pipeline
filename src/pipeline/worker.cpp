@@ -84,11 +84,12 @@ void worker::start_working(void* main_fiber)
 			}
 			catch (std::exception ex)
 			{
-				printf("%s\n", ex.what());
+				std::cout << ex.what() << std::endl;
 			}
 			catch (...)
 			{
-				printf("unknown error!\n");
+				std::cout << "unknown error!\n" << std::endl;
+				throw;
 			}
 
 			this_worker->__state = worker_state_t::WS_DONE;
