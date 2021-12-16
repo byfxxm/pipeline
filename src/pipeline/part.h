@@ -14,8 +14,8 @@ struct part_s
 	tag_t tag{ tag_t::TAG_NORMAL };
 };
 
-struct part_syn : public part_s
+struct part_syn_s : public part_s
 {
-	part_syn() : part_s(tag_t::TAG_SYN) {}
+	part_syn_s() : part_s(tag_t::TAG_SYN) {}
 	std::promise<void> prom;
 };

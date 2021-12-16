@@ -54,9 +54,9 @@ void worker_c::syn()
 	assert(IsThreadAFiber());
 	auto this_worker = (worker_c*)GetFiberData();
 
-	auto part_syn_ = std::make_shared<part_syn>();
-	auto fu = part_syn_->prom.get_future();
-	this_worker->write(part_syn_);
+	auto part_syn = std::make_shared<part_syn_s>();
+	auto fu = part_syn->prom.get_future();
+	this_worker->write(part_syn);
 
 	this_worker->__state = worker_state_t::WS_SYN;
 	this_worker->asleep();
