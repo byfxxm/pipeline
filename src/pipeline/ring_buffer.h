@@ -3,7 +3,7 @@
 namespace pipeline
 {
 	template<typename T, unsigned N>
-	class ring_buffer
+	class ring_buffer_c
 	{
 	public:
 		bool write(const T& data)

@@ -2,16 +2,16 @@
 #include "pipeline_imp.h"
 #include "worker.h"
 
-pipeline_imp::~pipeline_imp()
+pipeline_imp_c::~pipeline_imp_c()
 {
 	stop_async();
 	wait_for_idle();
 
-	for (auto worker_ : __worker_list)
-		delete worker_;
+	for (auto worker : __worker_list)
+		delete worker;
 }
 
-void pipeline_imp::start_async(output_f output)
+void pipeline_imp_c::start_async(output_f output)
 {
 	if (__running_thread.joinable() || __worker_list.empty() || !output)
 		return;
@@ -30,37 +30,37 @@ void pipeline_imp::start_async(output_f output)
 		});
 }
 
-void pipeline_imp::stop_async()
+void pipeline_imp_c::stop_async()
 {
 	__stopping = true;
 }
 
-void pipeline_imp::add_procedure(procedure_f proc)
+void pipeline_imp_c::add_procedure(procedure_f proc)
 {
-	auto worker_ = new worker(proc, __file);
+	auto worker = new worker_c(proc, __file);
 
 	if (!__worker_list.empty())
-		worker_->__prev_fifo = __worker_list.back()->__fifo;
+		worker->__prev_fifo = __worker_list.back()->__fifo;
 
-	__worker_list.push_back(worker_);
+	__worker_list.push_back(worker);
 }
 
-void pipeline_imp::wait_for_idle()
+void pipeline_imp_c::wait_for_idle()
 {
 	if (__running_thread.joinable())
 		__running_thread.join();
 }
 
-void pipeline_imp::set_file(const char* file)
+void pipeline_imp_c::set_file(const char* file)
 {
 	__file = file;
 }
-void pipeline_imp::reset_file()
+void pipeline_imp_c::reset_file()
 {
 	__file.clear();
 }
 
-void pipeline_imp::__schedule()
+void pipeline_imp_c::__schedule()
 {
 	if (__worker_list.empty())
 		return;
@@ -124,14 +124,14 @@ void pipeline_imp::__schedule()
 	}
 }
 
-inline void pipeline_imp::__start_working()
+inline void pipeline_imp_c::__start_working()
 {
-	for (auto worker_ : __worker_list)
-		worker_->start_working(__main_fiber);
+	for (auto worker : __worker_list)
+		worker->start_working(__main_fiber);
 }
 
-inline void pipeline_imp::__end_working()
+inline void pipeline_imp_c::__end_working()
 {
-	for (auto worker_ : __worker_list)
-		worker_->end_working();
+	for (auto worker : __worker_list)
+		worker->end_working();
 }

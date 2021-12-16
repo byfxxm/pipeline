@@ -2,30 +2,30 @@
 #include "pipeline.h"
 #include "worker.h"
 
-worker::worker(procedure_f proc, const std::string& file) : __proc(proc), __file(file) {}
+worker_c::worker_c(procedure_f proc, const std::string& file) : __proc(proc), __file(file) {}
 
-worker::~worker()
+worker_c::~worker_c()
 {
 	delete __fifo;
 }
 
-void worker::asleep()
+void worker_c::asleep()
 {
 	assert(IsThreadAFiber());
 	SwitchToFiber(__main_fiber);
 	__quit_if();
 }
 
-void worker::awake()
+void worker_c::awake()
 {
 	assert(IsThreadAFiber());
 	SwitchToFiber(__fiber);
 }
 
-void worker::write(const std::shared_ptr<part>& part_)
+void worker_c::write(const std::shared_ptr<part>& part_)
 {
 	assert(IsThreadAFiber());
-	auto this_worker = (worker*)GetFiberData();
+	auto this_worker = (worker_c*)GetFiberData();
 
 	while (!this_worker->__fifo->write(part_))
 	{
@@ -34,10 +34,10 @@ void worker::write(const std::shared_ptr<part>& part_)
 	}
 }
 
-std::shared_ptr<part> worker::read()
+std::shared_ptr<part> worker_c::read()
 {
 	assert(IsThreadAFiber());
-	auto this_worker = (worker*)GetFiberData();
+	auto this_worker = (worker_c*)GetFiberData();
 	std::shared_ptr<part> ret;
 
 	while (!this_worker->__prev_fifo->read(ret))
@@ -49,10 +49,10 @@ std::shared_ptr<part> worker::read()
 	return ret;
 }
 
-void worker::syn()
+void worker_c::syn()
 {
 	assert(IsThreadAFiber());
-	auto this_worker = (worker*)GetFiberData();
+	auto this_worker = (worker_c*)GetFiberData();
 
 	auto part_syn_ = std::make_shared<part_syn>();
 	auto fu = part_syn_->prom.get_future();
@@ -63,7 +63,7 @@ void worker::syn()
 	fu.wait();
 }
 
-void worker::start_working(void* main_fiber)
+void worker_c::start_working(void* main_fiber)
 {
 	assert(!__fiber);
 	__main_fiber = main_fiber;
@@ -71,12 +71,12 @@ void worker::start_working(void* main_fiber)
 
 	__fiber = CreateFiber(0, [](void* p)
 		{
-			auto this_worker = (worker*)p;
+			auto this_worker = (worker_c*)p;
 
 			try
 			{
 				this_worker->__quit_if();
-				utilities util{ this_worker->__read,  this_worker->__write, worker::syn, this_worker->__file.c_str() };
+				utilities util{ this_worker->__read,  this_worker->__write, worker_c::syn, this_worker->__file.c_str() };
 				this_worker->__proc(&util);
 			}
 			catch (quit)
@@ -97,7 +97,7 @@ void worker::start_working(void* main_fiber)
 		}, this);
 }
 
-void worker::end_working()
+void worker_c::end_working()
 {
 	if (__state != worker_state_t::WS_DONE)
 	{
@@ -111,12 +111,12 @@ void worker::end_working()
 	__fiber = nullptr;
 }
 
-worker_state_t worker::get_state()
+worker_state_t worker_c::get_state()
 {
 	return __state;
 }
 
-inline void worker::__quit_if()
+inline void worker_c::__quit_if()
 {
 	if (__state == worker_state_t::WS_QUITING)
 		throw quit();

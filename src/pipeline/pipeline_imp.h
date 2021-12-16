@@ -4,10 +4,10 @@
 
 namespace pipeline
 {
-	class pipeline_imp
+	class pipeline_imp_c
 	{
 	public:
-		~pipeline_imp();
+		~pipeline_imp_c();
 		void start_async(output_f);
 		void stop_async();
 		void add_procedure(procedure_f);
@@ -22,7 +22,7 @@ namespace pipeline
 
 	private:
 		std::thread __running_thread;
-		std::vector<worker*> __worker_list;
+		std::vector<worker_c*> __worker_list;
 		size_t __cur_worker{ 0 };
 		void* __main_fiber{ nullptr };
 		bool __stopping{ false };

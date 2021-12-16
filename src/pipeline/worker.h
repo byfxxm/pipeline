@@ -4,7 +4,7 @@
 
 namespace pipeline
 {
-	using fifo = ring_buffer<std::shared_ptr<part>, 4>;
+	using fifo = ring_buffer_c<std::shared_ptr<part>, 4>;
 	struct quit {};
 
 	enum class worker_state_t
@@ -18,14 +18,14 @@ namespace pipeline
 		WS_DONE,
 	};
 
-	class worker
+	class worker_c
 	{
 	public:
-		friend class pipeline_imp;
+		friend class pipeline_imp_c;
 
 	public:
-		worker(procedure_f, const std::string&);
-		~worker();
+		worker_c(procedure_f, const std::string&);
+		~worker_c();
 		static void write(const std::shared_ptr<part>&);
 		static std::shared_ptr<part> read();
 		static void syn();
