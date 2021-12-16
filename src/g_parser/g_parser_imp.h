@@ -2,7 +2,7 @@
 
 namespace g_parser
 {
-	class g_parser_imp
+	class g_parser_imp_c
 	{
 	public:
 		bool load_file(std::string);

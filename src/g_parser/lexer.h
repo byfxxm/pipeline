@@ -2,7 +2,7 @@
 
 namespace g_parser
 {
-	enum class token : char
+	enum class token_t : char
 	{
 		NA,
 		G = 'G',
@@ -17,15 +17,15 @@ namespace g_parser
 
 	struct token_s
 	{
-		token tok{ token::NA };
+		token_t tok{ token_t::NA };
 		std::string val;
 	};
 
-	class lexer
+	class lexer_c
 	{
 	public:
-		lexer() = delete;
-		lexer(std::ifstream&);
+		lexer_c() = delete;
+		lexer_c(std::ifstream&);
 		std::optional<token_s> next_token();
 
 	private:

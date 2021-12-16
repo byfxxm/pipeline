@@ -2,21 +2,21 @@
 #include "syntax.h"
 #include "lexer.h"
 
-syntax::syntax(std::ifstream& fin) : __fin(fin) {}
+syntax_c::syntax_c(std::ifstream& fin) : __fin(fin) {}
 
-std::optional<sentence> syntax::next_sentence()
+std::optional<sentence_s> syntax_c::next_sentence_s()
 {
-	lexer lex(__fin);
+	lexer_c lex(__fin);
 	std::optional<token_s> tk_s;
-	std::optional<sentence> ret;
+	std::optional<sentence_s> ret;
 
 	while (!(tk_s = lex.next_token()).has_value())
 	{
 		switch (tk_s.value().tok)
 		{
-		case token::G:
-			if (ret.value().pred != predicate::NA)
-				throw std::exception("double predicate");
+		case token_t::G:
+			if (ret.value().pred != predicate_t::NA)
+				throw std::exception("double predicate_c");
 
 			ret.value().pred = __match_pred(tk_s.value());
 			break;
@@ -29,13 +29,13 @@ std::optional<sentence> syntax::next_sentence()
 	return ret;
 }
 
-predicate syntax::__match_pred(token_s tk_s)
+predicate_t syntax_c::__match_pred(token_s tk_s)
 {
-	assert(tk_s.tok == token::G);
+	assert(tk_s.tok == token_t::G);
 	auto val = std::stof(tk_s.val);
 
 	if (val == 0)
-		return predicate::G0;
+		return predicate_t::G0;
 	
-	return predicate::NA;
+	return predicate_t::NA;
 }

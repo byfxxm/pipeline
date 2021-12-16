@@ -5,7 +5,7 @@
 
 void g_parser_proc(utilities* utils)
 {
-	g_parser_imp parser;
+	g_parser_imp_c parser;
 
 	if (!parser.load_file(utils->file))
 		return;

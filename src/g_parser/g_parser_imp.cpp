@@ -4,20 +4,20 @@
 #include "semantic.h"
 #include "../pipeline/pipeline.h"
 
-bool g_parser_imp::load_file(std::string file)
+bool g_parser_imp_c::load_file(std::string file)
 {
 	__file_stream.open(file);
 	return __file_stream.is_open();
 }
 
-void g_parser_imp::unload_file()
+void g_parser_imp_c::unload_file()
 {
 	__file_stream.close();
 }
 
-void g_parser_imp::parse(utilities* utils)
+void g_parser_imp_c::parse(utilities* utils)
 {
-	semantic sem(__file_stream);
+	semantic_c sem(__file_stream);
 	std::shared_ptr<part> part_;
 
 	while (part_ = sem.next_code())

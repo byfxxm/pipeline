@@ -4,10 +4,10 @@ struct part;
 
 namespace g_parser
 {
-	class semantic
+	class semantic_c
 	{
 	public:
-		semantic(std::ifstream&);
+		semantic_c(std::ifstream&);
 		std::shared_ptr<part> next_code();
 
 	private:

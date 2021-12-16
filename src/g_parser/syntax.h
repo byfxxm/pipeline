@@ -3,7 +3,7 @@
 
 namespace g_parser
 {
-	enum class predicate : char
+	enum class predicate_t : char
 	{
 		NA,
 		G0,
@@ -12,21 +12,21 @@ namespace g_parser
 
 	using advs_t = std::vector<token_s>;
 
-	struct sentence
+	struct sentence_s
 	{
-		predicate pred{ predicate::NA };
+		predicate_t pred{ predicate_t::NA };
 		advs_t advs;
 	};
 
-	class syntax
+	class syntax_c
 	{
 	public:
-		syntax() = delete;
-		syntax(std::ifstream&);
-		std::optional<sentence> next_sentence();
+		syntax_c() = delete;
+		syntax_c(std::ifstream&);
+		std::optional<sentence_s> next_sentence_s();
 
 	private:
-		predicate __match_pred(token_s);
+		predicate_t __match_pred(token_s);
 
 	private:
 		std::ifstream& __fin;

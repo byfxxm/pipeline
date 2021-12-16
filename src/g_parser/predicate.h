@@ -1,8 +1,8 @@
 #pragma once
 
-class predicate final
+class predicate_c final
 {
 public:
-	predicate() = delete;
+	predicate_c() = delete;
 	//static void g0(advs_t);
 };
