@@ -4,8 +4,8 @@
 
 namespace pipeline
 {
-	using fifo = ring_buffer_c<std::shared_ptr<part_s>, 4>;
-	struct quit {};
+	using fifo_t = ring_buffer_c<std::shared_ptr<part_s>, 4>;
+	struct quit_s {};
 
 	enum class worker_state_t
 	{
@@ -39,8 +39,8 @@ namespace pipeline
 		void __quit_if();
 
 	private:
-		fifo* __fifo{ new fifo() };
-		fifo* __prev_fifo{ nullptr };
+		fifo_t* __fifo{ new fifo_t() };
+		fifo_t* __prev_fifo{ nullptr };
 		procedure_f __proc{ nullptr };
 		void* __fiber{ nullptr };
 		void* __main_fiber{ nullptr };

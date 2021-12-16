@@ -79,7 +79,7 @@ void worker_c::start_working(void* main_fiber)
 				utilities_s util{ this_worker->__read,  this_worker->__write, worker_c::syn, this_worker->__file.c_str() };
 				this_worker->__proc(&util);
 			}
-			catch (quit)
+			catch (quit_s)
 			{
 			}
 			catch (std::exception ex)
@@ -119,5 +119,5 @@ worker_state_t worker_c::get_state()
 inline void worker_c::__quit_if()
 {
 	if (__state == worker_state_t::WS_QUITING)
-		throw quit();
+		throw quit_s();
 }
