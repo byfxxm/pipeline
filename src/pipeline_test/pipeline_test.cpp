@@ -21,7 +21,7 @@
 #pragma comment(lib, LIB_DIR "pipeline.lib")
 #pragma comment(lib, LIB_DIR "g_parser.lib")
 
-struct code : public part
+struct code_s : public part_s
 {
 	int index{ 0 };
 };
@@ -34,7 +34,7 @@ int main()
 
 	pipeline_add_procedure(pipeline, procedure1);
 
-	pipeline_add_procedure(pipeline, [](utilities* utils)
+	pipeline_add_procedure(pipeline, [](utilities_s* utils)
 		{
 			for (int i = 0; i < 5001; ++i)
 				utils->write(utils->read());
@@ -42,7 +42,7 @@ int main()
 			throw std::exception("=========== exception");
 		});
 
-	pipeline_add_procedure(pipeline, [](utilities* utils)
+	pipeline_add_procedure(pipeline, [](utilities_s* utils)
 		{
 			int count = 0;
 
@@ -60,14 +60,14 @@ int main()
 
 	for (int _i = 0; _i < 2; _i++)
 	{
-		pipeline_add_procedure(pipeline, [](utilities* utils)
+		pipeline_add_procedure(pipeline, [](utilities_s* utils)
 			{
 				while (1)
 					utils->write(utils->read());
 			});
 	}
 
-	pipeline_start_async(pipeline, [](const std::shared_ptr<part>& p)
+	pipeline_start_async(pipeline, [](const std::shared_ptr<part_s>& p)
 		{
 			if (!p)
 				return;
@@ -78,7 +78,7 @@ int main()
 				return;
 			}
 
-			auto p_ = std::static_pointer_cast<code>(p);
+			auto p_ = std::static_pointer_cast<code_s>(p);
 			std::cout << p_->index << std::endl;
 			g_index = p_->index;
 		});

@@ -15,11 +15,11 @@ void g_parser_imp_c::unload_file()
 	__file_stream.close();
 }
 
-void g_parser_imp_c::parse(utilities* utils)
+void g_parser_imp_c::parse(utilities_s* utils)
 {
 	semantic_c sem(__file_stream);
-	std::shared_ptr<part> part_;
+	std::shared_ptr<part_s> part;
 
-	while (part_ = sem.next_code())
-		utils->write(part_);
+	while (part = sem.next_code())
+		utils->write(part);
 }

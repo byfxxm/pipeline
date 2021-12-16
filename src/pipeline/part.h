@@ -7,15 +7,15 @@ enum class tag_t
 	TAG_SYN,
 };
 
-struct part
+struct part_s
 {
-	constexpr part() = default;
-	constexpr part(tag_t tag_) : tag(tag_) {}
+	constexpr part_s() = default;
+	constexpr part_s(tag_t tag_) : tag(tag_) {}
 	tag_t tag{ tag_t::TAG_NORMAL };
 };
 
-struct part_syn : public part
+struct part_syn : public part_s
 {
-	part_syn() : part(tag_t::TAG_SYN) {}
+	part_syn() : part_s(tag_t::TAG_SYN) {}
 	std::promise<void> prom;
 };

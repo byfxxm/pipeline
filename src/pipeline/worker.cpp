@@ -22,7 +22,7 @@ void worker_c::awake()
 	SwitchToFiber(__fiber);
 }
 
-void worker_c::write(const std::shared_ptr<part>& part_)
+void worker_c::write(const std::shared_ptr<part_s>& part_)
 {
 	assert(IsThreadAFiber());
 	auto this_worker = (worker_c*)GetFiberData();
@@ -34,11 +34,11 @@ void worker_c::write(const std::shared_ptr<part>& part_)
 	}
 }
 
-std::shared_ptr<part> worker_c::read()
+std::shared_ptr<part_s> worker_c::read()
 {
 	assert(IsThreadAFiber());
 	auto this_worker = (worker_c*)GetFiberData();
-	std::shared_ptr<part> ret;
+	std::shared_ptr<part_s> ret;
 
 	while (!this_worker->__prev_fifo->read(ret))
 	{
@@ -76,7 +76,7 @@ void worker_c::start_working(void* main_fiber)
 			try
 			{
 				this_worker->__quit_if();
-				utilities util{ this_worker->__read,  this_worker->__write, worker_c::syn, this_worker->__file.c_str() };
+				utilities_s util{ this_worker->__read,  this_worker->__write, worker_c::syn, this_worker->__file.c_str() };
 				this_worker->__proc(&util);
 			}
 			catch (quit)

@@ -5,7 +5,7 @@
 
 semantic_c::semantic_c(std::ifstream& fin) : __fin(fin) {}
 
-std::shared_ptr<part> semantic_c::next_code()
+std::shared_ptr<part_s> semantic_c::next_code()
 {
 	syntax_c syntax_c_(__fin);
 
@@ -15,5 +15,5 @@ std::shared_ptr<part> semantic_c::next_code()
 		//sent.pred
 	}
 
-	return std::make_shared<part>();
+	return std::make_shared<part_s>();
 }

@@ -8,10 +8,10 @@
 #define PIPELINE_API __declspec(dllimport)
 #endif
 
-struct utilities
+struct utilities_s
 {
-	using read_f = std::shared_ptr<part>(*)();
-	using write_f = void(*)(const std::shared_ptr<part>&);
+	using read_f = std::shared_ptr<part_s>(*)();
+	using write_f = void(*)(const std::shared_ptr<part_s>&);
 	using syn_f = void(*)();
 
 	const read_f read{ nullptr };
@@ -20,8 +20,8 @@ struct utilities
 	const char* file{ nullptr };
 };
 
-using output_f = utilities::write_f;
-using procedure_f = void(*)(utilities*);
+using output_f = utilities_s::write_f;
+using procedure_f = void(*)(utilities_s*);
 
 extern "C"
 {

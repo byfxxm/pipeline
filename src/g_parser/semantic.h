@@ -1,6 +1,6 @@
 #pragma once
 
-struct part;
+struct part_s;
 
 namespace g_parser
 {
@@ -8,7 +8,7 @@ namespace g_parser
 	{
 	public:
 		semantic_c(std::ifstream&);
-		std::shared_ptr<part> next_code();
+		std::shared_ptr<part_s> next_code();
 
 	private:
 		std::ifstream& __fin;

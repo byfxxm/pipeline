@@ -3,7 +3,7 @@
 #include "g_parser_imp.h"
 #include "../pipeline/pipeline.h"
 
-void g_parser_proc(utilities* utils)
+void g_parser_proc(utilities_s* utils)
 {
 	g_parser_imp_c parser;
 
