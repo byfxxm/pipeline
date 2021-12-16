@@ -126,10 +126,10 @@ void pipeline_imp::__schedule()
 
 inline void pipeline_imp::__start_working()
 {
-	std::for_each(__worker_list.begin(), __worker_list.end(), [this](auto it) {it->start_working(__main_fiber); });
+	std::for_each(__worker_list.begin(), __worker_list.end(), [this](auto iter) {iter->start_working(__main_fiber); });
 }
 
 inline void pipeline_imp::__end_working()
 {
-	std::for_each(__worker_list.begin(), __worker_list.end(), [](auto it) {it->end_working(); });
+	std::for_each(__worker_list.begin(), __worker_list.end(), [](auto iter) {iter->end_working(); });
 }
