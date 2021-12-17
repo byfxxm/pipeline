@@ -72,7 +72,7 @@ int main()
 			if (!p)
 				return;
 
-			if (p->tag == tag_t::TAG_SYN)
+			if (p->tag == tag_t::SYN)
 			{
 				std::static_pointer_cast<part_syn_s>(p)->prom.set_value();
 				return;
