@@ -29,7 +29,7 @@ void worker_c::write(const std::shared_ptr<part_s>& part_)
 
 	while (!this_worker->__fifo->write(part_))
 	{
-		this_worker->__state = worker_state_t::WS_WRITING;
+		this_worker->__state = worker_state_t::WRITING;
 		this_worker->asleep();
 	}
 }
@@ -42,7 +42,7 @@ std::shared_ptr<part_s> worker_c::read()
 
 	while (!this_worker->__prev_fifo->read(ret))
 	{
-		this_worker->__state = worker_state_t::WS_READING;
+		this_worker->__state = worker_state_t::READING;
 		this_worker->asleep();
 	}
 
@@ -58,7 +58,7 @@ void worker_c::syn()
 	auto fu = part_syn->prom.get_future();
 	this_worker->write(part_syn);
 
-	this_worker->__state = worker_state_t::WS_SYN;
+	this_worker->__state = worker_state_t::SYN;
 	this_worker->asleep();
 	fu.wait();
 }
@@ -67,7 +67,7 @@ void worker_c::start_working(void* main_fiber)
 {
 	assert(!__fiber);
 	__main_fiber = main_fiber;
-	__state = worker_state_t::WS_READY;
+	__state = worker_state_t::READY;
 
 	__fiber = CreateFiber(0, [](void* p)
 		{
@@ -92,18 +92,18 @@ void worker_c::start_working(void* main_fiber)
 				throw;
 			}
 
-			this_worker->__state = worker_state_t::WS_DONE;
+			this_worker->__state = worker_state_t::DONE;
 			this_worker->asleep();
 		}, this);
 }
 
 void worker_c::end_working()
 {
-	if (__state != worker_state_t::WS_DONE)
+	if (__state != worker_state_t::DONE)
 	{
-		__state = worker_state_t::WS_QUITING;
+		__state = worker_state_t::QUITING;
 		awake();
-		assert(__state == worker_state_t::WS_DONE);
+		assert(__state == worker_state_t::DONE);
 	}
 
 	assert(__fiber);
@@ -118,6 +118,6 @@ worker_state_t worker_c::get_state()
 
 inline void worker_c::__quit_if()
 {
-	if (__state == worker_state_t::WS_QUITING)
+	if (__state == worker_state_t::QUITING)
 		throw quit_s();
 }

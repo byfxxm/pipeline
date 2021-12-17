@@ -75,10 +75,10 @@ void pipeline_imp_c::__schedule()
 			for (; index >= 0; --index)
 			{
 				auto state = __worker_list[index]->get_state();
-				if (state == worker_state_t::WS_DONE)
+				if (state == worker_state_t::DONE)
 					return;
 
-				if (state == worker_state_t::WS_SYN)
+				if (state == worker_state_t::SYN)
 					break;
 			}
 
@@ -92,15 +92,15 @@ void pipeline_imp_c::__schedule()
 
 		switch (__worker_list[__cur_worker]->get_state())
 		{
-		case worker_state_t::WS_READING:
+		case worker_state_t::READING:
 			if (__cur_worker == 0)
 				throw std::exception("first procedure shouldn't read");
 
 			switch (__worker_list[__cur_worker - 1]->get_state())
 			{
-			case worker_state_t::WS_READING:
-			case worker_state_t::WS_DONE:
-			case worker_state_t::WS_SYN:
+			case worker_state_t::READING:
+			case worker_state_t::DONE:
+			case worker_state_t::SYN:
 				++__cur_worker;
 				break;
 
@@ -111,9 +111,9 @@ void pipeline_imp_c::__schedule()
 
 			break;
 
-		case worker_state_t::WS_WRITING:
-		case worker_state_t::WS_DONE:
-		case worker_state_t::WS_SYN:
+		case worker_state_t::WRITING:
+		case worker_state_t::DONE:
+		case worker_state_t::SYN:
 			++__cur_worker;
 			break;
 
