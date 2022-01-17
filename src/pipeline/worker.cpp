@@ -76,8 +76,8 @@ void worker_c::start_working(void* main_fiber)
 			try
 			{
 				this_worker->__quit_if();
-				utilities_s util{ this_worker->__read,  this_worker->__write, worker_c::syn, this_worker->__file.c_str() };
-				this_worker->__proc(&util);
+				utilities_s utils{ this_worker->__read,  this_worker->__write, worker_c::syn, this_worker->__file.c_str() };
+				this_worker->__proc(&utils);
 			}
 			catch (quit_s)
 			{
