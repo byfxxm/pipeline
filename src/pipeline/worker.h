@@ -21,9 +21,6 @@ namespace pipeline
 	class worker_c
 	{
 	public:
-		friend class pipeline_imp_c;
-
-	public:
 		worker_c(procedure_f, const std::string&);
 		~worker_c();
 		static void write(const std::shared_ptr<part_s>&);
@@ -37,6 +34,7 @@ namespace pipeline
 
 	private:
 		void __quit_if();
+		friend class pipeline_imp_c;
 
 	private:
 		fifo_t* __fifo{ new fifo_t() };
