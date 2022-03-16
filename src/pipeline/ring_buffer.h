@@ -11,8 +11,8 @@ namespace pipeline
 			if (is_full())
 				return false;
 
-			__write_index = (__write_index + 1) % N;
 			__buffer[__write_index] = data;
+			__write_index = (__write_index + 1) % N;
 			return true;
 		}
 
@@ -21,8 +21,8 @@ namespace pipeline
 			if (is_empty())
 				return false;
 
-			__read_index = (__read_index + 1) % N;
 			data = __buffer[__read_index];
+			__read_index = (__read_index + 1) % N;
 			return true;
 		}
 
